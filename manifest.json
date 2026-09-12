@@ -1,22 +1,16 @@
 {
-  "name": "Krona Pay",
-  "short_name": "Krona",
-  "start_url": "",
-  "scope": "/Krona/",
-  "display": "standalone",
-  "orientation": "portrait",
-  "theme_color": "#F0464F",
-  "background_color": "#F5F4F1",
-  "icons": [
-    {
-      "src": "/Krona/_img/logo.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/Krona/_img/logo-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+    "name": "Krona",
+    "short_name": "Krona",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#050505",
+    "theme_color": "#050505",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "_img/logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
 }
