@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Krona</title>
+    <link rel="icon" type="image/png" href="_img/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+</head>
+
+<body class="dark">
+
+    <div class="app">
+
+        <!-- Header -->
+        <header class="app-header">
+            <span class="logo">Krona</span>
+
+            <div class="header-right">
+                <span class="month-label" id="monthLabel">Set 2026</span>
+
+                <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
+                    ☀️
+                </button>
+            </div>
+        </header>
+
+        <!-- Page title -->
+        <div class="page-title-wrap">
+            <h2 class="page-title" id="pageTitle">Visão Geral</h2>
+        </div>
+
+        <!-- Screens -->
+        <main class="main-scroll" id="mainScroll">
+
+            <!-- HOME -->
+            <section class="screen active" id="screen-home">
+
+                <div class="balance-card">
+
+                    <div class="balance-deco deco1"></div>
+                    <div class="balance-deco deco2"></div>
+
+                    <p class="balance-label">Saldo Total</p>
+
+                    <h2 class="balance-value num purple-glow" id="totalBalance">
+                        R$ 1.135,80
+                    </h2>
+
+                    <div class="balance-row">
+
+                        <div class="balance-col">
+                            <p class="balance-sub-label">Entradas</p>
+
+                            <p class="balance-sub-val num green-glow" id="totalIncome">
+                                +R$ 2.340,00
+                            </p>
+                        </div>
+
+                        <div class="balance-divider"></div>
+
+                        <div class="balance-col">
+                            <p class="balance-sub-label">Saídas</p>
+
+                            <p class="balance-sub-val num red-glow" id="totalExpense">
+                                -R$ 1.204,20
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="card">
+
+                    <p class="card-label">
+                        Fluxo — últimos 6 meses
+                    </p>
+
+                    <canvas id="homeChart" height="100"></canvas>
+
+                </div>
+
+                <p class="section-label">
+                    Recentes
+                </p>
+
+                <div class="tx-list" id="homeTxList"></div>
+
+            </section>
+
+
+            <!-- ACCOUNTS -->
+            <section class="screen" id="screen-accounts">
+
+                <p class="section-label">
+                    Suas contas
+                </p>
+
+                <div id="accountsList"></div>
+
+            </section>
+
+
+            <!-- CATEGORIES -->
+            <section class="screen" id="screen-categories">
+
+                <p class="section-label">
+                    Despesas por categoria
+                </p>
+
+                <div id="expenseCategories"></div>
+
+                <p class="section-label" style="margin-top:16px">
+                    Fontes de renda
+                </p>
+
+                <div id="incomeCategories"></div>
+
+            </section>
+
+
+            <!-- CHARTS -->
+            <section class="screen" id="screen-charts">
+
+                <div class="chart-toggle" id="chartToggle">
+
+                    <button class="chart-tab active" data-chart="monthly">
+                        Mensal
+                    </button>
+
+                    <button class="chart-tab" data-chart="pie">
+                        Por Categoria
+                    </button>
+
+                </div>
+
+
+                <div class="card" id="chartMonthly">
+
+                    <p class="card-label">
+                        Entradas vs. Saídas
+                    </p>
+
+                    <canvas id="barChart" height="200"></canvas>
+
+                    <div class="chart-legend">
+
+                        <div class="legend-item">
+                            <span class="legend-dot green"></span>
+                            <span class="legend-text">Entradas</span>
+                        </div>
+
+                        <div class="legend-item">
+                            <span class="legend-dot red"></span>
+                            <span class="legend-text">Saídas</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div id="chartPie" style="display:none;">
+
+                    <div class="card">
+
+                        <p class="card-label">
+                            Distribuição de gastos
+                        </p>
+
+                        <canvas id="pieChart" height="220"></canvas>
+
+                    </div>
+
+                    <div id="pieList" class="pie-list"></div>
+
+                </div>
+
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+                        <p class="stat-label">Maior gasto</p>
+                        <p class="stat-sub">Moradia</p>
+                        <p class="stat-val num red-glow">
+                            R$ 1.687,60
+                        </p>
+                    </div>
+
+                    <div class="stat-card">
+                        <p class="stat-label">Mais frequente</p>
+                        <p class="stat-sub">Alimentação</p>
+                        <p class="stat-val num purple-glow">
+                            3×
+                        </p>
+                    </div>
+
+                    <div class="stat-card">
+                        <p class="stat-label">Economia</p>
+                        <p class="stat-sub">Set/2026</p>
+                        <p class="stat-val num green-glow">
+                            R$ 5.471,10
+                        </p>
+                    </div>
+
+                    <div class="stat-card">
+                        <p class="stat-label">Média mensal</p>
+                        <p class="stat-sub">Gastos</p>
+                        <p class="stat-val num cyan-glow">
+                            R$ 3.733,15
+                        </p>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- DATA DB -->
+            <section class="screen" id="screen-data-db">
+
+                <!-- Pastas -->
+                <div id="dataDbFolders">
+
+                    <p class="section-label">
+                        Configurações do banco de dados
+                    </p>
+
+                    <div class="data-db-folder-list">
+
+                        <button class="data-db-folder" data-db-type="accounts">
+
+                            <span class="data-db-folder-icon">
+                                <i class="fas fa-university"></i>
+                            </span>
+
+                            <span class="data-db-folder-info">
+
+                                <span class="data-db-folder-name">
+                                    Bancos
+                                </span>
+
+                                <span class="data-db-folder-desc">
+                                    Dados das contas bancárias
+                                </span>
+
+                            </span>
+
+                            <span class="data-db-folder-arrow">
+                                ›
+                            </span>
+
+                        </button>
+
+
+                        <button class="data-db-folder" data-db-type="categories">
+
+                            <span class="data-db-folder-icon">
+                                <i class="fas fa-tags"></i>
+                            </span>
+
+                            <span class="data-db-folder-info">
+
+                                <span class="data-db-folder-name">
+                                    Categorias
+                                </span>
+
+                                <span class="data-db-folder-desc">
+                                    Categorias de entradas e saídas
+                                </span>
+
+                            </span>
+
+                            <span class="data-db-folder-arrow">
+                                ›
+                            </span>
+
+                        </button>
+
+
+                        <button class="data-db-folder" data-db-type="transactions">
+
+                            <span class="data-db-folder-icon">
+                                <i class="fas fa-receipt"></i>
+                            </span>
+
+                            <span class="data-db-folder-info">
+
+                                <span class="data-db-folder-name">
+                                    Registros
+                                </span>
+
+                                <span class="data-db-folder-desc">
+                                    Todos os registros financeiros
+                                </span>
+
+                            </span>
+
+                            <span class="data-db-folder-arrow">
+                                ›
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Pasta aberta -->
+                <div id="dataDbEditor" style="display:none;">
+
+                    <div class="data-db-editor-header">
+
+                        <button class="data-db-back" id="dataDbBack" aria-label="Voltar">
+                            ‹
+                        </button>
+
+                        <div class="data-db-editor-title-wrap">
+
+                            <p class="section-label" id="dataDbEditorLabel">
+                                Banco de dados
+                            </p>
+
+                            <h3 class="data-db-editor-title" id="dataDbEditorTitle">
+                                Bancos
+                            </h3>
+
+                        </div>
+
+                        <button class="data-db-save" id="dataDbSave" disabled>
+
+                            <i class="fas fa-save"></i>
+
+                            <span>
+                                Salvar
+                            </span>
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="data-db-records" id="dataDbRecords"></div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+
+        <!-- Bottom Nav -->
+        <nav class="bottom-nav">
+
+            <button class="nav-btn active" data-tab="home">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Início</span>
+            </button>
+
+
+            <button class="nav-btn" data-tab="accounts">
+                <span class="nav-icon">🏦</span>
+                <span class="nav-label">Bancos</span>
+            </button>
+
+
+            <button class="nav-btn" data-tab="categories">
+                <span class="nav-icon">🪟</span>
+                <span class="nav-label">Categ.</span>
+            </button>
+
+
+            <button class="nav-btn" data-tab="charts">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Análise</span>
+            </button>
+
+
+            <button class="nav-btn" data-tab="data-db">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-label">Config</span>
+            </button>
+
+        </nav>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+
+    <script src="index.js"></script>
+
+</body>
+
+</html>
