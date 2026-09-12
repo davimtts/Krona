@@ -77,7 +77,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 30px 8px;
+    padding: 30px 30px 8px;
     flex-shrink: 0;
 }
 
@@ -114,7 +114,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 5px;
     transition: background 0.2s;
 }
 
@@ -335,6 +334,7 @@ body {
 
     font-size: 31px;
     line-height: 31px;
+    align-items: center;
 
     flex-shrink: 0;
 }
