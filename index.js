@@ -76,7 +76,7 @@ const CATEGORIES = [
         id: "5",
         name: "Streaming",
         type: "expense",
-        icon: "fas fa-tv",
+        icon: "fas fa-film",
         color: "#FF6BB0"
     },
 
@@ -1037,8 +1037,8 @@ function buildPieChart() {
 
                                         const col =
                                             PIE_COLORS[
-                                                p.dataIndex %
-                                                PIE_COLORS.length
+                                            p.dataIndex %
+                                            PIE_COLORS.length
                                             ];
 
                                         return ttWrap(
@@ -1081,7 +1081,7 @@ function buildPieChart() {
 
                 const col =
                     PIE_COLORS[
-                        i % PIE_COLORS.length
+                    i % PIE_COLORS.length
                     ];
 
                 const pct =
@@ -1109,8 +1109,8 @@ function buildPieChart() {
                             style="
                                 background:${col};
                                 ${theme === "dark"
-                                    ? `box-shadow:0 0 6px ${col}`
-                                    : ""}
+                        ? `box-shadow:0 0 6px ${col}`
+                        : ""}
                             "
                         ></div>
 
@@ -1134,8 +1134,8 @@ function buildPieChart() {
                             style="
                                 color:${col};
                                 ${theme === "dark"
-                                    ? `text-shadow:0 0 6px ${col}80`
-                                    : ""}
+                        ? `text-shadow:0 0 6px ${col}80`
+                        : ""}
                             "
                         >
                             ${fmt(item.value)}
@@ -1464,8 +1464,8 @@ function renderAccounts() {
                             style="
                                 color:${acc.color};
                                 text-shadow:${d
-                                    ? `0 0 12px ${acc.color}80`
-                                    : "none"}
+                    ? `0 0 12px ${acc.color}80`
+                    : "none"}
                             "
                         >
                             ${fmt(acc.balance)}
@@ -1497,8 +1497,8 @@ function renderAccounts() {
                                 style="
                                     color:#39FF14;
                                     text-shadow:${d
-                                        ? "0 0 8px rgba(57,255,20,.5)"
-                                        : "none"}
+                    ? "0 0 8px rgba(57,255,20,.5)"
+                    : "none"}
                                 "
                             >
                                 +${fmt(inc)}
@@ -1521,8 +1521,8 @@ function renderAccounts() {
                                 style="
                                     color:#FF2D6B;
                                     text-shadow:${d
-                                        ? "0 0 8px rgba(255,45,107,.5)"
-                                        : "none"}
+                    ? "0 0 8px rgba(255,45,107,.5)"
+                    : "none"}
                                 "
                             >
                                 -${fmt(exp)}
@@ -1536,9 +1536,9 @@ function renderAccounts() {
                     <div class="tx-list">
 
                         ${txs
-                            .slice(0, 4)
-                            .map(txRow)
-                            .join("")}
+                    .slice(0, 4)
+                    .map(txRow)
+                    .join("")}
 
                     </div>
 
@@ -1557,7 +1557,7 @@ function renderAccounts() {
 
                         openAccountId =
                             openAccountId ===
-                            acc.id
+                                acc.id
                                 ? null
                                 : acc.id;
 
@@ -1621,10 +1621,10 @@ function renderCategories() {
         Object.entries(expMap)
             .map(
                 ([categoryId, total]) =>
-                    ({
-                        categoryId,
-                        total
-                    })
+                ({
+                    categoryId,
+                    total
+                })
             )
             .sort(
                 (a, b) =>
@@ -1637,10 +1637,10 @@ function renderCategories() {
         Object.entries(incMap)
             .map(
                 ([categoryId, total]) =>
-                    ({
-                        categoryId,
-                        total
-                    })
+                ({
+                    categoryId,
+                    total
+                })
             )
             .sort(
                 (a, b) =>
@@ -1678,8 +1678,8 @@ function renderCategories() {
 
                     const col =
                         EXP_COLORS[
-                            i %
-                            EXP_COLORS.length
+                        i %
+                        EXP_COLORS.length
                         ];
 
                     const pct =
@@ -1712,8 +1712,8 @@ function renderCategories() {
                                     style="
                                         color:#FF2D6B;
                                         text-shadow:${d
-                                            ? "0 0 8px rgba(255,45,107,.5)"
-                                            : ""}
+                            ? "0 0 8px rgba(255,45,107,.5)"
+                            : ""}
                                     "
                                 >
                                     ${fmt(c.total)}
@@ -1730,8 +1730,8 @@ function renderCategories() {
                                         width:${pct}%;
                                         background:${col};
                                         ${d
-                                            ? `box-shadow:0 0 6px ${col}80`
-                                            : ""}
+                            ? `box-shadow:0 0 6px ${col}80`
+                            : ""}
                                     "
                                 ></div>
 
@@ -1797,8 +1797,8 @@ function renderCategories() {
                                 style="
                                     color:#39FF14;
                                     text-shadow:${d
-                                        ? "0 0 8px rgba(57,255,20,.5)"
-                                        : ""}
+                            ? "0 0 8px rgba(57,255,20,.5)"
+                            : ""}
                                 "
                             >
                                 +${fmt(c.total)}
@@ -2042,7 +2042,7 @@ function renderDataDbRecords() {
 
     const config =
         DATA_DB_CONFIG[
-            dataDbOpenType
+        dataDbOpenType
         ];
 
 
@@ -2125,9 +2125,9 @@ function renderDataDbRecords() {
 
                     <span class="data-db-record-id">
                         ${escapeHtml(
-                            record.id ??
-                            "sem-id"
-                        )}
+                record.id ??
+                "sem-id"
+            )}
                     </span>
 
                 </div>
@@ -2136,20 +2136,20 @@ function renderDataDbRecords() {
                 <div class="data-db-fields">
 
                     ${keys
-                        .map(
-                            key => {
+                    .map(
+                        key => {
 
-                                const value =
-                                    record[key];
-
-
-                                const inputType =
-                                    getValueType(
-                                        value
-                                    );
+                            const value =
+                                record[key];
 
 
-                                return `
+                            const inputType =
+                                getValueType(
+                                    value
+                                );
+
+
+                            return `
 
                                     <div class="data-db-field">
 
@@ -2177,9 +2177,9 @@ function renderDataDbRecords() {
 
                                 `;
 
-                            }
-                        )
-                        .join("")}
+                        }
+                    )
+                    .join("")}
 
                 </div>
 
@@ -2247,7 +2247,7 @@ function handleDataDbInput(
 
     const record =
         records[
-            recordIndex
+        recordIndex
         ];
 
 
