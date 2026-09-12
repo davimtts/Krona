@@ -71,9 +71,15 @@ body {
     max-width: 430px;
     margin: 0 auto;
     background: var(--bg);
+    padding-top: 70px;
 }
 
 .app-header {
+    position:fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
