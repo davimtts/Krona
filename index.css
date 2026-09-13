@@ -67,12 +67,32 @@ body {
 .app {
     display: flex;
     flex-direction: column;
+    position: relative;
     min-height: 100dvh;
     max-width: 430px;
-    margin: 0 auto;
+    margin: 0 ;
     background: var(--bg);
     padding-top: 70px;
+    z-index: 1;
+  
 }
+.bg-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    /* Adiciona uma cor preta de fundo JUNTO com a imagem */
+    background-color: rgba(0, 0, 0, 0.6); /* 0.6 controla a escuridão (de 0 a 1) */
+    background-image: url('img/bg.jpg');
+    background-size: cover;
+    /* Faz a mágica de misturar a imagem com a cor preta */
+    background-blend-mode: multiply; 
+    z-index: 0;
+    pointer-events: none;
+}
+
+
 
 .app-header {
     position:fixed;
@@ -80,11 +100,13 @@ body {
     left: 0;
     right: 0;
     width: 100%;
+    max-width: 430px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 30px 30px 8px;
     flex-shrink: 0;
+    z-index: 2;
 }
 
 .logo {
@@ -755,6 +777,7 @@ body.light .legend-dot {
     -webkit-backdrop-filter: blur(20px);
     flex-shrink: 0;
     padding-bottom: env(safe-area-inset-bottom, 0px);
+    max-width: 430px;
 }
 
 .nav-btn {
@@ -769,6 +792,30 @@ body.light .legend-dot {
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     position: relative;
+}
+.nav-plus {
+    position: fixed;
+    bottom: 80px;
+    right: 15px;
+    width: 50px;
+    height: 50px;
+    background: none;
+    border: none;
+    transition: transform 0.2s;
+
+}
+.nav-plus:hover .nav-plus img:hover {
+    transform: scale(1.12);
+    width: 100px;
+}
+.nav-plus:active {
+    scale: 0.9;
+    transform: rotate(-90deg);
+}
+.nav-plus img {
+    width: 100%;
+    
+
 }
 
 .nav-icon {
@@ -816,7 +863,7 @@ body.light .legend-dot {
     left: 0;
     right: 0;
     width: 100%;
-    z-index: 999;
+    z-index: 2;
     /* Garante que fique acima dos outros elementos */
     background-color: var(--bg-card);
     /* Ajuste com a sua variável ou cor */
@@ -1034,34 +1081,43 @@ body.light .nav-btn.active::after {
     }
 }
 
+
+/* ── Registros ── */
+
 .data-db-records {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
 }
 
 .data-db-record {
+    width: 100%;
     border-radius: var(--radius);
     background: var(--bg-card);
     border: 1px solid var(--border);
     overflow: hidden;
 }
 
+
+/* Cabeçalho do registro */
+
 .data-db-record-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
-    padding: 11px 14px;
+    gap: 8px;
+    min-height: 32px;
+    padding: 6px 10px;
     border-bottom: 1px solid var(--border);
     background: rgba(200, 85, 255, .035);
 }
 
 .data-db-record-number {
     font-family: var(--font-num);
-    font-size: 9px;
+    font-size: 8px;
     color: var(--purple);
     letter-spacing: .06em;
+    white-space: nowrap;
 }
 
 .data-db-record-id {
@@ -1070,51 +1126,65 @@ body.light .nav-btn.active::after {
     text-overflow: ellipsis;
     white-space: nowrap;
     font-family: var(--font-num);
-    font-size: 10px;
+    font-size: 9px;
     color: var(--text-dim);
 }
 
+
+/* Campos */
+
 .data-db-fields {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: stretch;
 }
 
 .data-db-field {
-    display: grid;
-    grid-template-columns: minmax(70px, 30%) 1fr;
-    align-items: center;
-    gap: 10px;
-    min-height: 48px;
-    padding: 7px 14px;
+    flex: 1 1 180px;
+    min-width: 140px;
+    min-height: 46px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    padding: 6px 10px;
+    border-right: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
 }
 
 .data-db-field:last-child {
-    border-bottom: none;
+    border-right: none;
 }
 
+
+/* Nome do campo */
+
 .data-db-key {
+    width: 100%;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-family: var(--font-num);
-    font-size: 9px;
+    font-size: 8px;
     color: var(--text-dim);
 }
+
+
+/* Input */
 
 .data-db-input {
     width: 100%;
     min-width: 0;
-    height: 34px;
-    padding: 0 9px;
-    border-radius: 7px;
+    height: 30px;
+    padding: 0 8px;
+    border-radius: 6px;
     border: 1px solid var(--border);
     outline: none;
     background: rgba(255, 255, 255, .025);
     color: var(--text);
     font-family: var(--font-body);
-    font-size: 12px;
+    font-size: 11px;
     transition:
         border-color .2s,
         box-shadow .2s,
@@ -1131,8 +1201,11 @@ body.light .data-db-input {
     background: #fff;
 }
 
+
+/* Registro vazio */
+
 .data-db-empty {
-    padding: 30px 16px;
+    padding: 25px 16px;
     border-radius: var(--radius);
     border: 1px solid var(--border);
     background: var(--bg-card);
@@ -1141,17 +1214,70 @@ body.light .data-db-input {
     color: var(--text-dim);
 }
 
-@media (max-width: 360px) {
+
+/* ── Responsivo ── */
+
+@media (max-width: 600px) {
+
+    .data-db-records {
+        gap: 7px;
+    }
+
+    .data-db-record-head {
+        min-height: 30px;
+        padding: 6px 9px;
+    }
+
+    .data-db-fields {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 
     .data-db-field {
-        grid-template-columns: minmax(60px, 34%) 1fr;
-        gap: 7px;
-        padding-left: 10px;
-        padding-right: 10px;
+        min-width: 0;
+        min-height: 44px;
+        padding: 6px 8px;
+        border-right: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .data-db-field:nth-child(2n) {
+        border-right: none;
+    }
+
+    .data-db-key {
+        font-size: 7px;
     }
 
     .data-db-input {
-        font-size: 11px;
+        height: 28px;
+        font-size: 10px;
+        padding: 0 7px;
+    }
+}
+
+
+/* ── Celulares muito pequenos ── */
+
+@media (max-width: 360px) {
+
+    .data-db-fields {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .data-db-field {
+        min-height: 42px;
+        padding: 5px 7px;
+    }
+
+    .data-db-input {
+        height: 27px;
+        font-size: 10px;
+    }
+
+    .data-db-record-id {
+        max-width: 55%;
+        font-size: 8px;
     }
 
     .data-db-save {

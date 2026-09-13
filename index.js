@@ -2,29 +2,9 @@
 
 
 const ACCOUNTS = [
-    {
-        id: "nubank",
-        name: "Nubank",
-        bank: "Nu Pagamentos S.A.",
-        balance: 275.50,
-        color: "#C855FF"
-    },
-
-    {
-        id: "itau",
-        name: "Itaú",
-        bank: "Banco Itaú S.A.",
-        balance: 478.00,
-        color: "#ff8800"
-    },
-
-    {
-        id: "mp",
-        name: "MercadoPago",
-        bank: "Banco Mercado Pago S.A.",
-        balance: 100.30,
-        color: "#ffffff"
-    }
+    {id: "nubank", name: "Nubank", bank: "Nu Pagamentos S.A.", balance: 275.50, color: "#C855FF"},
+    {id: "itau",name: "Itaú",bank: "Banco Itaú S.A.",balance: 478.00, color: "#ff8800"},
+    {id: "mp",name: "MercadoPago",bank: "Mercado Pago Pagamentos LTDA",balance: 100.30,color: "#ffd900"}
 ];
 
 
@@ -2482,6 +2462,14 @@ document.addEventListener(
     "DOMContentLoaded",
     () => {
 
+
+        document.getElementById("addTxBtn").addEventListener(
+            "click",
+            () => {
+                /* abrir modal de adicionar transação */
+                alert("Abrir modal de adicionar transação");
+            }
+        );
 
         document
             .getElementById(
