@@ -724,48 +724,66 @@ function startFirestoreListeners(user) {
     if (unsubscribeCategories) unsubscribeCategories();
     if (unsubscribeTransactions) unsubscribeTransactions();
 
-    const base = collection(db, "users", user.uid);
+    const userRef = doc(db, "users", user.uid);
 
-    unsubscribeAccounts = onSnapshot(collection(base, "accounts"), (snapshot) => {
-        ACCOUNTS.length = 0;
+    unsubscribeAccounts = onSnapshot(
+        collection(userRef, "accounts"),
+        (snapshot) => {
+            ACCOUNTS.length = 0;
 
-        snapshot.forEach((item) => {
-            ACCOUNTS.push({
-                id: item.id,
-                ...item.data()
+            snapshot.forEach((item) => {
+                ACCOUNTS.push({
+                    id: item.id,
+                    ...item.data()
+                });
             });
-        });
 
-        ACCOUNTS.sort((a, b) => String(a.name).localeCompare(String(b.name)));
-        refreshAll();
-    }, (error) => console.error("accounts:", error));
+            ACCOUNTS.sort((a, b) =>
+                String(a.name).localeCompare(String(b.name))
+            );
 
-    unsubscribeCategories = onSnapshot(collection(base, "categories"), (snapshot) => {
-        CATEGORIES.length = 0;
+            refreshAll();
+        },
+        (error) => console.error("accounts:", error)
+    );
 
-        snapshot.forEach((item) => {
-            CATEGORIES.push({
-                id: item.id,
-                ...item.data()
+    unsubscribeCategories = onSnapshot(
+        collection(userRef, "categories"),
+        (snapshot) => {
+            CATEGORIES.length = 0;
+
+            snapshot.forEach((item) => {
+                CATEGORIES.push({
+                    id: item.id,
+                    ...item.data()
+                });
             });
-        });
 
-        CATEGORIES.sort((a, b) => Number(a.id) - Number(b.id));
-        refreshAll();
-    }, (error) => console.error("categories:", error));
+            CATEGORIES.sort((a, b) =>
+                Number(a.id) - Number(b.id)
+            );
 
-    unsubscribeTransactions = onSnapshot(collection(base, "transactions"), (snapshot) => {
-        TRANSACTIONS.length = 0;
+            refreshAll();
+        },
+        (error) => console.error("categories:", error)
+    );
 
-        snapshot.forEach((item) => {
-            TRANSACTIONS.push({
-                id: item.id,
-                ...item.data()
+    unsubscribeTransactions = onSnapshot(
+        collection(userRef, "transactions"),
+        (snapshot) => {
+            TRANSACTIONS.length = 0;
+
+            snapshot.forEach((item) => {
+                TRANSACTIONS.push({
+                    id: item.id,
+                    ...item.data()
+                });
             });
-        });
 
-        refreshAll();
-    }, (error) => console.error("transactions:", error));
+            refreshAll();
+        },
+        (error) => console.error("transactions:", error)
+    );
 }
 
 async function initApp(user) {

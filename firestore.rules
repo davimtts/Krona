@@ -3,11 +3,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-<<<<<<< HEAD
-    // Cada usuário possui seu próprio espaço.
-    // Nada dentro de users/{uid} pode ser acessado por outro usuário.
-=======
->>>>>>> d3ece0dfa613fa889c55c34bb0d7c1ac67819fe9
+
     match /users/{userId} {
       allow read, write: if request.auth != null
                          && request.auth.uid == userId;
@@ -18,16 +14,8 @@ service cloud.firestore {
       }
     }
 
-<<<<<<< HEAD
-    // Tudo que não estiver dentro de users/{uid} fica bloqueado.
-=======
->>>>>>> d3ece0dfa613fa889c55c34bb0d7c1ac67819fe9
     match /{document=**} {
       allow read, write: if false;
     }
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> d3ece0dfa613fa889c55c34bb0d7c1ac67819fe9

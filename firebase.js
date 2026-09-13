@@ -1,11 +1,16 @@
-// firebase.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+
 import {
     getAuth,
     browserLocalPersistence,
     setPersistence
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+import {
+    getFirestore,
+    doc,    
+    setDoc
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDlJvLN8nXBNG7Yi2mh-vnYmuUUnEeFeh4",
@@ -18,13 +23,13 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
 const auth = getAuth(app);
 const db = getFirestore(app);
 
 await setPersistence(auth, browserLocalPersistence);
 
-<<<<<<< HEAD
+console.log("Firebase conectado:", app.options.projectId);
+console.log("Firestore conectado:", db);
+
 export { app, auth, db };
-=======
-export { app, auth, db };
->>>>>>> d3ece0dfa613fa889c55c34bb0d7c1ac67819fe9
