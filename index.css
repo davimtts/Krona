@@ -80,6 +80,7 @@ body {
 .bg-overlay {
     display: none;
 }
+
 .bg-overlay .bg-console {
     position: fixed;
     top: 50%;
@@ -94,18 +95,38 @@ body {
     height: 400px;
     z-index: 1000;
 }
+
 .bg-console-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+}
+.bg-console-list {
     width: 100%;
     height: 100%;
     border-collapse: collapse;
     display: flex;
     flex-direction: column;
 }
+
+.bg-console-table tbody {
+    width: 100%;
+}
+
+.bg-console-table tr {
+    width: 100%;
+}
+
 .bg-console-table th,
 .bg-console-table td {
     border: 1px solid #555;
     padding: 8px;
+
     text-align: left;
+
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 @media (min-width:430px) {
@@ -1403,6 +1424,10 @@ body.light .data-db-input {
    NOVA TRANSAÇÃO
 ========================================================= */
 
+/* =========================================================
+   NOVA TRANSAÇÃO
+========================================================= */
+
 .tx-modal {
     position: fixed;
     inset: 0;
@@ -1417,13 +1442,16 @@ body.light .data-db-input {
 .tx-modal-backdrop {
     position: absolute;
     inset: 0;
+
     background: rgba(0, 0, 0, .72);
+
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
 }
 
 .tx-modal-sheet {
     position: absolute;
+
     left: 50%;
     bottom: 0;
 
@@ -1433,11 +1461,9 @@ body.light .data-db-input {
     padding: 20px 18px 30px;
 
     background:
-        radial-gradient(
-            circle at 50% -20%,
+        radial-gradient(circle at 50% -20%,
             rgba(200, 85, 255, .13),
-            transparent 45%
-        ),
+            transparent 45%),
         var(--card, #0d0d0f);
 
     border-radius: 28px 28px 0 0;
@@ -1447,7 +1473,9 @@ body.light .data-db-input {
         0 0 50px rgba(200, 85, 255, .08);
 
     transform: translate(-50%, 100%);
-    transition: transform .42s cubic-bezier(.22, 1, .36, 1);
+
+    transition:
+        transform .42s cubic-bezier(.22, 1, .36, 1);
 
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -1458,12 +1486,15 @@ body.light .data-db-input {
 }
 
 
-/* HEADER */
+/* =========================================================
+   HEADER
+========================================================= */
 
 .tx-modal-header {
     display: flex;
     align-items: center;
     gap: 14px;
+
     margin-bottom: 24px;
 }
 
@@ -1478,8 +1509,8 @@ body.light .data-db-input {
     align-items: center;
     justify-content: center;
 
-    color: rgba(255,255,255,.7);
-    background: rgba(255,255,255,.07);
+    color: rgba(255, 255, 255, .7);
+    background: rgba(255, 255, 255, .07);
 
     cursor: pointer;
 }
@@ -1513,14 +1544,12 @@ body.light .data-db-input {
 
     border-radius: 20px;
 
-    background: rgba(200,85,255,.10);
+    background: rgba(200, 85, 255, .10);
 }
-
-
-/* STEPS */
 
 .tx-step-content {
     display: none;
+
     animation: txStepIn .35s ease;
 }
 
@@ -1529,6 +1558,7 @@ body.light .data-db-input {
 }
 
 @keyframes txStepIn {
+
     from {
         opacity: 0;
         transform: translateY(15px);
@@ -1538,27 +1568,42 @@ body.light .data-db-input {
         opacity: 1;
         transform: translateY(0);
     }
+
 }
 
 .tx-modal-description {
     margin: 0 0 18px;
 
-    color: rgba(255,255,255,.55);
+    color: rgba(255, 255, 255, .55);
 
     font-size: 13px;
 }
 
 
 /* =========================================================
-   APPLE WALLET CARDS
+   CARTÕES
 ========================================================= */
 
 .wallet-stack {
     position: relative;
 
-    min-height: 230px;
+    display: flex;
+    flex-direction: column;
 
-    padding: 10px 4px 30px;
+    gap: 10px;
+
+    padding: 5px 4px 10px;
+}
+
+.wallet-stack-cat {
+    position: relative;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 10px;
+
+    padding: 5px 4px 10px;
 }
 
 .wallet-card {
@@ -1567,7 +1612,11 @@ body.light .data-db-input {
     width: 100%;
     height: 190px;
 
+    flex-shrink: 0;
+
     padding: 20px;
+
+    box-sizing: border-box;
 
     border-radius: 24px;
 
@@ -1576,75 +1625,22 @@ body.light .data-db-input {
     cursor: pointer;
 
     box-shadow:
-        0 15px 35px rgba(0,0,0,.35),
-        inset 0 1px 0 rgba(255,255,255,.18);
+        0 15px 35px rgba(0, 0, 0, .35),
+        inset 0 1px 0 rgba(255, 255, 255, .18);
 
     transition:
-        transform .5s cubic-bezier(.22,1,.36,1),
-        margin .5s cubic-bezier(.22,1,.36,1),
-        opacity .35s ease;
+        transform .45s cubic-bezier(.22, 1, .36, 1),
+        opacity .35s ease,
+        margin .45s cubic-bezier(.22, 1, .36, 1);
 
     user-select: none;
-}
-
-.wallet-card:not(:first-child) {
-    margin-top: -145px;
-}
-
-.wallet-card:nth-child(1) {
-    z-index: 5;
-}
-
-.wallet-card:nth-child(2) {
-    z-index: 4;
-}
-
-.wallet-card:nth-child(3) {
-    z-index: 3;
-}
-
-.wallet-card:nth-child(4) {
-    z-index: 2;
-}
-
-.wallet-card:nth-child(5) {
-    z-index: 1;
-}
-
-.wallet-card:hover {
-    transform: translateY(-3px);
-}
-
-.wallet-stack.expanded {
-    min-height: auto;
-    padding-bottom: 10px;
-}
-
-.wallet-stack.expanded .wallet-card {
-    margin-top: 10px;
-    transform: none;
-}
-
-.wallet-stack.expanded .wallet-card:first-child {
-    margin-top: 0;
-}
-
-.wallet-card.selected {
-    transform: scale(1.015);
-    box-shadow:
-        0 20px 45px rgba(0,0,0,.45),
-        0 0 30px rgba(255,255,255,.08);
-}
-
-.wallet-card.hidden-card {
-    opacity: .32;
-    transform: scale(.96);
 }
 
 .wallet-card::after {
     content: "";
 
     position: absolute;
+
     width: 180px;
     height: 180px;
 
@@ -1653,15 +1649,42 @@ body.light .data-db-input {
 
     border-radius: 50%;
 
-    background: rgba(255,255,255,.14);
-    filter: blur(2px);
+    background: rgba(255, 255, 255, .14);
 }
+
+.wallet-card.selected {
+    transform: translateY(14px) scale(1.015);
+
+    box-shadow:
+        0 25px 55px rgba(0, 0, 0, .5),
+        0 0 35px rgba(200, 85, 255, .16),
+        inset 0 1px 0 rgba(255, 255, 255, .22);
+}
+
+.wallet-card.hidden-card {
+    opacity: .38;
+}
+
+.wallet-stack.has-selection .wallet-card:not(.selected) {
+    transform: scale(.96);
+}
+
+.wallet-stack.has-selection .wallet-card.selected {
+    transform: translateY(14px) scale(1.02);
+}
+
+
+/* =========================================================
+   CONTA NO CARTÃO
+========================================================= */
 
 .wallet-card-top {
     position: relative;
+
     z-index: 2;
 
     display: flex;
+
     justify-content: space-between;
     align-items: flex-start;
 }
@@ -1676,19 +1699,21 @@ body.light .data-db-input {
     align-items: center;
     justify-content: center;
 
-    background: rgba(255,255,255,.15);
+    background: rgba(255, 255, 255, .15);
 
     overflow: hidden;
 }
 
 .wallet-card-logo img {
-    width: 30px;
-    height: 30px;
-    object-fit: contain;
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
 }
 
 .wallet-card-logo i {
     font-size: 22px;
+
     color: white;
 }
 
@@ -1698,7 +1723,7 @@ body.light .data-db-input {
     letter-spacing: 1.4px;
     text-transform: uppercase;
 
-    color: rgba(255,255,255,.65);
+    color: rgba(255, 255, 255, .65);
 }
 
 .wallet-card-info {
@@ -1723,18 +1748,22 @@ body.light .data-db-input {
 
     font-size: 13px;
 
-    color: rgba(255,255,255,.72);
+    color: rgba(255, 255, 255, .72);
 }
 
 
 /* =========================================================
-   TIPO
+   DÉBITO / CRÉDITO
 ========================================================= */
 
 .tx-type-buttons {
     display: flex;
+
     flex-direction: column;
+
     gap: 12px;
+
+    margin-top: 10px;
 }
 
 .tx-type-btn {
@@ -1742,39 +1771,59 @@ body.light .data-db-input {
 
     display: flex;
     align-items: center;
+
     gap: 14px;
 
     padding: 17px;
 
-    border: 1px solid rgba(255,255,255,.08);
     border-radius: 18px;
-
-    background: rgba(255,255,255,.045);
-
-    color: white;
-
-    text-align: left;
 
     cursor: pointer;
 
+    text-align: left;
+
     transition:
         transform .2s ease,
-        border-color .2s ease,
+        box-shadow .2s ease,
         background .2s ease;
 }
 
-.tx-type-btn:active {
-    transform: scale(.98);
+
+/* DÉBITO = ROXO */
+
+.tx-type-btn.debit {
+    border: 1px solid #c855ff;
+
+    background: #c855ff;
+
+    color: white;
+
+    box-shadow:
+        0 10px 30px rgba(200, 85, 255, .18);
 }
 
-.tx-type-btn.expense:hover {
-    border-color: rgba(255,45,107,.5);
-    background: rgba(255,45,107,.08);
+.tx-type-btn.debit .tx-type-icon {
+    color: white;
+    background: rgba(255, 255, 255, .14);
 }
 
-.tx-type-btn.income:hover {
-    border-color: rgba(57,255,20,.5);
-    background: rgba(57,255,20,.07);
+
+/* CRÉDITO = BRANCO */
+
+.tx-type-btn.credit {
+    border: 1px solid rgba(200, 85, 255, .55);
+
+    background: white;
+
+    color: #9b3cff;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, .16);
+}
+
+.tx-type-btn.credit .tx-type-icon {
+    color: #9b3cff;
+    background: rgba(200, 85, 255, .10);
 }
 
 .tx-type-icon {
@@ -1792,18 +1841,9 @@ body.light .data-db-input {
     font-size: 18px;
 }
 
-.tx-type-btn.expense .tx-type-icon {
-    color: #ff2d6b;
-    background: rgba(255,45,107,.12);
-}
-
-.tx-type-btn.income .tx-type-icon {
-    color: #39ff14;
-    background: rgba(57,255,20,.10);
-}
-
 .tx-type-btn strong {
     display: block;
+
     font-size: 15px;
 }
 
@@ -1813,7 +1853,12 @@ body.light .data-db-input {
     margin-top: 3px;
 
     font-size: 11px;
-    color: rgba(255,255,255,.45);
+
+    opacity: .65;
+}
+
+.tx-type-btn:active {
+    transform: scale(.98);
 }
 
 
@@ -1829,17 +1874,20 @@ body.light .data-db-input {
     font-family: "Orbitron", sans-serif;
 
     font-size: clamp(32px, 9vw, 48px);
+
     font-weight: 600;
 
     color: #c855ff;
 
     text-shadow:
-        0 0 15px rgba(200,85,255,.35);
+        0 0 15px rgba(200, 85, 255, .35);
 }
 
 .tx-keypad {
     display: grid;
+
     grid-template-columns: repeat(3, 1fr);
+
     gap: 9px;
 }
 
@@ -1849,11 +1897,12 @@ body.light .data-db-input {
     border: 0;
     border-radius: 17px;
 
-    background: rgba(255,255,255,.055);
+    background: rgba(255, 255, 255, .055);
 
     color: white;
 
     font-family: "Orbitron", sans-serif;
+
     font-size: 20px;
 
     cursor: pointer;
@@ -1864,20 +1913,23 @@ body.light .data-db-input {
 }
 
 .tx-keypad button:hover {
-    background: rgba(200,85,255,.13);
+    background: rgba(200, 85, 255, .13);
 }
 
 .tx-keypad button:active {
     transform: scale(.94);
-    background: rgba(200,85,255,.22);
+
+    background: rgba(200, 85, 255, .22);
 }
 
 .tx-keypad button:last-child {
-    color: #ff5c8a;
+    color: #c855ff;
 }
 
 
-/* NEXT */
+/* =========================================================
+   BOTÕES
+========================================================= */
 
 .tx-next-btn,
 .tx-send-btn {
@@ -1889,11 +1941,10 @@ body.light .data-db-input {
     border: 0;
     border-radius: 18px;
 
-    background: linear-gradient(
-        135deg,
-        #9b3cff,
-        #c855ff
-    );
+    background:
+        linear-gradient(135deg,
+            #9b3cff,
+            #c855ff);
 
     color: white;
 
@@ -1901,7 +1952,7 @@ body.light .data-db-input {
     font-weight: 600;
 
     box-shadow:
-        0 10px 30px rgba(200,85,255,.25);
+        0 10px 30px rgba(200, 85, 255, .25);
 
     cursor: pointer;
 
@@ -1918,6 +1969,7 @@ body.light .data-db-input {
 .tx-next-btn:disabled,
 .tx-send-btn:disabled {
     opacity: .35;
+
     cursor: not-allowed;
 }
 
@@ -1927,7 +1979,6 @@ body.light .data-db-input {
 ========================================================= */
 
 .category-stack {
-    min-height: 0;
     padding-bottom: 0;
 }
 
@@ -1936,34 +1987,16 @@ body.light .data-db-input {
 
     display: flex;
     align-items: center;
+
     gap: 13px;
 
     padding: 12px 16px;
 
     border-radius: 18px;
-
-    cursor: pointer;
-
-    transition:
-        transform .2s ease,
-        opacity .2s ease,
-        margin .35s ease;
-}
-
-.category-card:not(:first-child) {
-    margin-top: -54px;
 }
 
 .category-card.selected {
-    transform: scale(1.025);
-}
-
-.category-stack.expanded .category-card {
-    margin-top: 8px;
-}
-
-.category-stack.expanded .category-card:first-child {
-    margin-top: 0;
+    transform: translateY(8px) scale(1.025);
 }
 
 .category-card-icon {
@@ -1976,7 +2009,7 @@ body.light .data-db-input {
     align-items: center;
     justify-content: center;
 
-    background: rgba(0,0,0,.18);
+    background: rgba(0, 0, 0, .18);
 
     color: white;
 }
@@ -1984,11 +2017,14 @@ body.light .data-db-input {
 .category-card-name {
     font-size: 14px;
     font-weight: 600;
+
     color: white;
 }
 
 
-/* DESCRIÇÃO */
+/* =========================================================
+   DESCRIÇÃO
+========================================================= */
 
 .tx-description-wrap {
     margin-top: 16px;
@@ -2002,25 +2038,257 @@ body.light .data-db-input {
 
     padding: 0 16px;
 
-    border: 1px solid rgba(255,255,255,.08);
+    border: 1px solid rgba(255, 255, 255, .08);
     border-radius: 16px;
 
     outline: none;
 
-    background: rgba(255,255,255,.045);
+    background: rgba(255, 255, 255, .045);
 
     color: white;
 
     font-family: "Outfit", sans-serif;
+
     font-size: 14px;
 }
 
 .tx-description-input::placeholder {
-    color: rgba(255,255,255,.35);
+    color: rgba(255, 255, 255, .35);
 }
 
 .tx-description-input:focus {
-    border-color: rgba(200,85,255,.5);
+    border-color: rgba(200, 85, 255, .5);
+}
+
+
+.account-credit {
+    margin-top: 3px;
+    font-family: "Outfit", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: #ff2d6b;
+    text-shadow: 0 0 8px rgba(255, 45, 107, .35);
+}
+
+/* =========================================================
+   TRANSACTION - TIPO DE MOVIMENTO
+   ========================================================= */
+
+.tx-type-chooser {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 14px;
+    animation: txTypeAppear 0.25s ease;
+}
+
+@keyframes txTypeAppear {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tx-type-btn {
+    width: 100%;
+    min-height: 68px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    padding: 12px 15px;
+
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    cursor: pointer;
+    transition:
+        transform 0.18s ease,
+        border-color 0.18s ease,
+        background 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.tx-type-btn:active {
+    transform: scale(0.98);
+}
+
+.tx-type-btn .tx-type-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+    font-size: 17px;
+}
+
+.tx-type-btn span:last-child {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+}
+
+.tx-type-btn strong {
+    font-family: "Outfit", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.tx-type-btn small {
+    font-family: "Outfit", sans-serif;
+    font-size: 11px;
+    opacity: 0.55;
+}
+
+
+/* DÉBIT */
+
+.tx-type-debit {
+    background: #8d45ff;
+    border-color: #8d45ff;
+    color: white;
+}
+
+.tx-type-debit .tx-type-icon {
+    background: rgba(255, 255, 255, 0.14);
+}
+
+
+/* CRÉDIT */
+
+.tx-type-credit {
+    background: #ffffff;
+    border-color: #8d45ff;
+    color: #8d45ff;
+}
+
+.tx-type-credit .tx-type-icon {
+    background: rgba(141, 69, 255, 0.10);
+}
+
+
+/* SELECIONADO */
+
+.tx-type-btn.selected {
+    transform: scale(1.015);
+    box-shadow: 0 0 22px rgba(141, 69, 255, 0.22);
+}
+
+
+/* =========================================================
+   BOTÃO PRÓXIMO / ENVIAR
+   ========================================================= */
+
+.tx-next-btn {
+    width: 100%;
+    height: 52px;
+    margin-top: 16px;
+
+    border: 0;
+    border-radius: 15px;
+
+    background: #8d45ff;
+    color: white;
+
+    font-family: "Outfit", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.18s ease,
+        box-shadow 0.2s ease;
+}
+
+.tx-next-btn:not(:disabled) {
+    box-shadow: 0 0 18px rgba(141, 69, 255, 0.22);
+}
+
+.tx-next-btn:not(:disabled):active {
+    transform: scale(0.98);
+}
+
+.tx-next-btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   DESCRIÇÃO
+   ========================================================= */
+
+.tx-description-wrap {
+    margin-top: 16px;
+    animation: txDescriptionAppear 0.25s ease;
+}
+
+@keyframes txDescriptionAppear {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tx-description-wrap label {
+    display: block;
+    margin-bottom: 8px;
+
+    font-family: "Outfit", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.tx-description-wrap label span {
+    opacity: 0.45;
+}
+
+.tx-description-wrap input {
+    width: 100%;
+    height: 48px;
+
+    padding: 0 14px;
+
+    border: 1px solid var(--border);
+    border-radius: 13px;
+
+    background: rgba(255, 255, 255, 0.04);
+    color: inherit;
+
+    outline: none;
+
+    font-family: "Outfit", sans-serif;
+    font-size: 14px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.tx-description-wrap input:focus {
+    border-color: #8d45ff;
+    box-shadow: 0 0 14px rgba(141, 69, 255, 0.12);
 }
 
 
@@ -2029,7 +2297,8 @@ body.light .data-db-input {
 @media (max-width: 480px) {
 
     .tx-modal-sheet {
-        padding-bottom: calc(25px + env(safe-area-inset-bottom));
+        padding-bottom:
+            calc(25px + env(safe-area-inset-bottom));
     }
 
     .wallet-card {
@@ -2039,4 +2308,5 @@ body.light .data-db-input {
     .tx-keypad button {
         height: 58px;
     }
+
 }

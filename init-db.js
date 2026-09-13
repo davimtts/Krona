@@ -15,7 +15,22 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 
-console.log("🔥 INIT-DB.JS CARREGADO");
+enviarDados("", "init-db.js: carregado", "info");
+
+async function enviarDados(data, dados, tipo,) {
+    
+    if (tipo === "data") {
+        const console = document.getElementById("bgConsoleTable");
+        console.innerHTML += `<tr>
+                    <td>${data}</td>
+                    <td>${dados}</td>
+                </tr>`;
+    } else if (tipo === "info") {
+        const console = document.getElementById("bgConsoleList");
+        console.innerHTML += `<span>${dados}</span>`;
+    }
+
+}
 
 
 const DEFAULT_ACCOUNTS = [
@@ -210,14 +225,10 @@ async function criarColecaoSeNaoExistir(uid, nome, dados) {
 
     const snapshot = await getDocs(ref);
 
-    console.log(`📂 ${nome}: ${snapshot.size} documentos encontrados`);
+    
+    enviarDados(nome, snapshot.size, "data");
 
-    if (!snapshot.empty) {
-        console.log(`✅ ${nome} já existe`);
-        return;
-    }
 
-    console.log(`🛠️ Criando coleção ${nome}...`);
 
     const batch = writeBatch(db);
 
@@ -238,13 +249,12 @@ async function criarColecaoSeNaoExistir(uid, nome, dados) {
 
     await batch.commit();
 
-    console.log(`✅ Coleção ${nome} criada`);
 }
 
 
 async function inicializarBanco(user) {
 
-    console.log("🔥 Usuário autenticado:", user.uid);
+    enviarDados("uid", user.uid, "data");
 
     try {
 
@@ -259,7 +269,7 @@ async function inicializarBanco(user) {
 
         if (!userSnapshot.exists()) {
 
-            console.log("🛠️ Criando documento do usuário...");
+            enviarDados("Criando documento do usuário...", "info");
 
             await setDoc(userRef, {
                 uid: user.uid,
@@ -269,11 +279,11 @@ async function inicializarBanco(user) {
                 updatedAt: serverTimestamp()
             });
 
-            console.log("✅ users/{uid} criado");
+            enviarDados("", "users/{uid}: criado", "info");
 
         } else {
 
-            console.log("✅ users/{uid} já existe");
+            enviarDados("", "users/{uid}: logado", "info");
 
         }
 

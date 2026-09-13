@@ -7,7 +7,6 @@
     <title>Krona</title>
 
     <link rel="manifest" href="manifest.json">
-
     <link rel="apple-touch-icon" href="img/logo.png">
 
     <meta name="theme-color" content="#050505">
@@ -15,57 +14,78 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Krona">
+
     <link rel="icon" type="image/png" href="img/logo.png" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
     <link
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet" />
+        rel="stylesheet"
+    />
+
     <link rel="stylesheet" href="index.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
 </head>
 
 <body class="dark">
-    <div class="bg-overlay">
-        <div class="bg-console">
-            <div class="bg-console-table" id="bgConsoleDb">
-                <span>@firebase-db - buscando dados...</span>
-                <span>@firebase-db - validando transações...</span>
-            </div>
-            <table class="bg-console-table" id="bgConsoleError">
-                <tr>
-                    <td>@System</td>
-                    <td> - buscando dados...</td>
-                </tr>
-                <tr>
-                    <td>@System</td>
-                    <td> - dados corrompidos[0x0001]</td>
-                </tr>
 
+    <div class="bg-overlay">
+
+        <div class="bg-console">
+
+            <div class="bg-console-list" id="bgConsoleList">
+                
+            </div>
+
+            <table class="bg-console-table" id="bgConsoleTable">
+                
             </table>
+
         </div>
+
     </div>
+
+
     <div class="app">
 
-        <!-- Header -->
+        <!-- HEADER -->
         <header class="app-header">
-            <span class="logo">Krona</span>
 
+            <span class="logo">
+                Krona
+            </span>
 
-            <span class="month-label" id="monthLabel">Set 2026</span>
+            <span class="month-label" id="monthLabel">
+                Set 2026
+            </span>
 
-
-            <i class="fas fa-bars" style="color: blueviolet; font-size: 24px;"></i>
+            <i
+                class="fas fa-bars"
+                style="color: blueviolet; font-size: 24px;"
+            ></i>
 
         </header>
 
-        <!-- Page title -->
+
+        <!-- PAGE TITLE -->
         <div class="page-title-wrap">
-            <h2 class="page-title" id="pageTitle">Visão Geral</h2>
+
+            <h2 class="page-title" id="pageTitle">
+                Visão Geral
+            </h2>
+
         </div>
 
-        <!-- Screens -->
+
+        <!-- SCREENS -->
         <main class="main-scroll" id="mainScroll">
+
 
             <!-- HOME -->
             <section class="screen active" id="screen-home">
@@ -75,35 +95,55 @@
                     <div class="balance-deco deco1"></div>
                     <div class="balance-deco deco2"></div>
 
-                    <p class="balance-label">Saldo Total</p>
+                    <p class="balance-label">
+                        Saldo Total
+                    </p>
 
-                    <h2 class="balance-value num purple-glow" id="totalBalance">
+                    <h2
+                        class="balance-value num purple-glow"
+                        id="totalBalance"
+                    >
                         R$ 1.135,80
                     </h2>
 
                     <div class="balance-row">
 
                         <div class="balance-col">
-                            <p class="balance-sub-label">Entradas</p>
 
-                            <p class="balance-sub-val num green-glow" id="totalIncome">
+                            <p class="balance-sub-label">
+                                Entradas
+                            </p>
+
+                            <p
+                                class="balance-sub-val num green-glow"
+                                id="totalIncome"
+                            >
                                 +R$ 2.340,00
                             </p>
+
                         </div>
 
                         <div class="balance-divider"></div>
 
                         <div class="balance-col">
-                            <p class="balance-sub-label">Saídas</p>
 
-                            <p class="balance-sub-val num red-glow" id="totalExpense">
+                            <p class="balance-sub-label">
+                                Saídas
+                            </p>
+
+                            <p
+                                class="balance-sub-val num red-glow"
+                                id="totalExpense"
+                            >
                                 -R$ 1.204,20
                             </p>
+
                         </div>
 
                     </div>
 
                 </div>
+
 
                 <div class="card">
 
@@ -115,11 +155,15 @@
 
                 </div>
 
+
                 <p class="section-label">
                     Recentes
                 </p>
 
-                <div class="tx-list" id="homeTxList"></div>
+                <div
+                    class="tx-list"
+                    id="homeTxList"
+                ></div>
 
             </section>
 
@@ -145,7 +189,10 @@
 
                 <div id="expenseCategories"></div>
 
-                <p class="section-label" style="margin-top:16px">
+                <p
+                    class="section-label"
+                    style="margin-top:16px"
+                >
                     Fontes de renda
                 </p>
 
@@ -157,37 +204,62 @@
             <!-- CHARTS -->
             <section class="screen" id="screen-charts">
 
-                <div class="chart-toggle" id="chartToggle">
+                <div
+                    class="chart-toggle"
+                    id="chartToggle"
+                >
 
-                    <button class="chart-tab active" data-chart="monthly">
+                    <button
+                        class="chart-tab active"
+                        data-chart="monthly"
+                    >
                         Mensal
                     </button>
 
-                    <button class="chart-tab" data-chart="pie">
+                    <button
+                        class="chart-tab"
+                        data-chart="pie"
+                    >
                         Por Categoria
                     </button>
 
                 </div>
 
 
-                <div class="card" id="chartMonthly">
+                <div
+                    class="card"
+                    id="chartMonthly"
+                >
 
                     <p class="card-label">
                         Entradas vs. Saídas
                     </p>
 
-                    <canvas id="barChart" height="200"></canvas>
+                    <canvas
+                        id="barChart"
+                        height="200"
+                    ></canvas>
 
                     <div class="chart-legend">
 
                         <div class="legend-item">
+
                             <span class="legend-dot green"></span>
-                            <span class="legend-text">Entradas</span>
+
+                            <span class="legend-text">
+                                Entradas
+                            </span>
+
                         </div>
 
                         <div class="legend-item">
+
                             <span class="legend-dot red"></span>
-                            <span class="legend-text">Saídas</span>
+
+                            <span class="legend-text">
+                                Saídas
+                            </span>
+
                         </div>
 
                     </div>
@@ -195,7 +267,10 @@
                 </div>
 
 
-                <div id="chartPie" style="display:none;">
+                <div
+                    id="chartPie"
+                    style="display:none;"
+                >
 
                     <div class="card">
 
@@ -203,11 +278,17 @@
                             Distribuição de gastos
                         </p>
 
-                        <canvas id="pieChart" height="220"></canvas>
+                        <canvas
+                            id="pieChart"
+                            height="220"
+                        ></canvas>
 
                     </div>
 
-                    <div id="pieList" class="pie-list"></div>
+                    <div
+                        id="pieList"
+                        class="pie-list"
+                    ></div>
 
                 </div>
 
@@ -215,35 +296,70 @@
                 <div class="stats-grid">
 
                     <div class="stat-card">
-                        <p class="stat-label">Maior gasto</p>
-                        <p class="stat-sub">Moradia</p>
+
+                        <p class="stat-label">
+                            Maior gasto
+                        </p>
+
+                        <p class="stat-sub">
+                            Moradia
+                        </p>
+
                         <p class="stat-val num red-glow">
                             R$ 1.687,60
                         </p>
+
                     </div>
 
+
                     <div class="stat-card">
-                        <p class="stat-label">Mais frequente</p>
-                        <p class="stat-sub">Alimentação</p>
+
+                        <p class="stat-label">
+                            Mais frequente
+                        </p>
+
+                        <p class="stat-sub">
+                            Alimentação
+                        </p>
+
                         <p class="stat-val num purple-glow">
                             3×
                         </p>
+
                     </div>
 
+
                     <div class="stat-card">
-                        <p class="stat-label">Economia</p>
-                        <p class="stat-sub">Set/2026</p>
+
+                        <p class="stat-label">
+                            Economia
+                        </p>
+
+                        <p class="stat-sub">
+                            Set/2026
+                        </p>
+
                         <p class="stat-val num green-glow">
                             R$ 5.471,10
                         </p>
+
                     </div>
 
+
                     <div class="stat-card">
-                        <p class="stat-label">Média mensal</p>
-                        <p class="stat-sub">Gastos</p>
+
+                        <p class="stat-label">
+                            Média mensal
+                        </p>
+
+                        <p class="stat-sub">
+                            Gastos
+                        </p>
+
                         <p class="stat-val num cyan-glow">
                             R$ 3.733,15
                         </p>
+
                     </div>
 
                 </div>
@@ -254,26 +370,48 @@
             <!-- DATA DB -->
             <section class="screen" id="screen-data-db">
 
-                <!-- Pastas -->
                 <div id="dataDbFolders">
 
                     <div class="user-panel">
+
                         <div class="user-panel-info">
-                            <span class="user-panel-name" id="currentUserName">Usuário</span>
-                            <span class="user-panel-email" id="currentUserEmail"></span>
+
+                            <span
+                                class="user-panel-name"
+                                id="currentUserName"
+                            >
+                                Usuário
+                            </span>
+
+                            <span
+                                class="user-panel-email"
+                                id="currentUserEmail"
+                            ></span>
+
                         </div>
-                        <button class="logout-btn" id="logoutBtn" type="button">
+
+                        <button
+                            class="logout-btn"
+                            id="logoutBtn"
+                            type="button"
+                        >
                             <i class="fas fa-sign-out-alt"></i>
                         </button>
+
                     </div>
+
 
                     <p class="section-label">
                         Configurações do banco de dados
                     </p>
 
+
                     <div class="data-db-folder-list">
 
-                        <button class="data-db-folder" data-db-type="accounts">
+                        <button
+                            class="data-db-folder"
+                            data-db-type="accounts"
+                        >
 
                             <span class="data-db-folder-icon">
                                 <i class="fas fa-university"></i>
@@ -298,7 +436,10 @@
                         </button>
 
 
-                        <button class="data-db-folder" data-db-type="categories">
+                        <button
+                            class="data-db-folder"
+                            data-db-type="categories"
+                        >
 
                             <span class="data-db-folder-icon">
                                 <i class="fas fa-tags"></i>
@@ -323,7 +464,10 @@
                         </button>
 
 
-                        <button class="data-db-folder" data-db-type="transactions">
+                        <button
+                            class="data-db-folder"
+                            data-db-type="transactions"
+                        >
 
                             <span class="data-db-folder-icon">
                                 <i class="fas fa-receipt"></i>
@@ -352,28 +496,47 @@
                 </div>
 
 
-                <!-- Pasta aberta -->
-                <div id="dataDbEditor" style="display:none;">
+                <!-- DATA DB EDITOR -->
+                <div
+                    id="dataDbEditor"
+                    style="display:none;"
+                >
 
                     <div class="data-db-editor-header">
 
-                        <button class="data-db-back" id="dataDbBack" aria-label="Voltar">
+                        <button
+                            class="data-db-back"
+                            id="dataDbBack"
+                            aria-label="Voltar"
+                        >
                             ‹
                         </button>
 
+
                         <div class="data-db-editor-title-wrap">
 
-                            <p class="section-label" id="dataDbEditorLabel">
+                            <p
+                                class="section-label"
+                                id="dataDbEditorLabel"
+                            >
                                 Banco de dados
                             </p>
 
-                            <h3 class="data-db-editor-title" id="dataDbEditorTitle">
+                            <h3
+                                class="data-db-editor-title"
+                                id="dataDbEditorTitle"
+                            >
                                 Bancos
                             </h3>
 
                         </div>
 
-                        <button class="data-db-save" id="dataDbSave" disabled>
+
+                        <button
+                            class="data-db-save"
+                            id="dataDbSave"
+                            disabled
+                        >
 
                             <i class="fas fa-save"></i>
 
@@ -386,7 +549,10 @@
                     </div>
 
 
-                    <div class="data-db-records" id="dataDbRecords"></div>
+                    <div
+                        class="data-db-records"
+                        id="dataDbRecords"
+                    ></div>
 
                 </div>
 
@@ -395,39 +561,87 @@
         </main>
 
 
-        <!-- Bottom Nav -->
+        <!-- BOTTOM NAV -->
         <nav class="bottom-nav">
-            <button class="nav-plus" id="addTxBtn">
-                <img src="img/plus.png" alt="Adicionar" />
 
+            <button
+                class="nav-plus"
+                id="addTxBtn"
+            >
+                <img
+                    src="img/plus.png"
+                    alt="Adicionar"
+                />
             </button>
-            <button class="nav-btn active" data-tab="home">
+
+
+            <button
+                class="nav-btn active"
+                data-tab="home"
+            >
+
                 <i class="nav-icon fas fa-home"></i>
-                <span class="nav-label">Início</span>
+
+                <span class="nav-label">
+                    Início
+                </span>
+
             </button>
 
 
-            <button class="nav-btn" data-tab="accounts">
+            <button
+                class="nav-btn"
+                data-tab="accounts"
+            >
+
                 <i class="nav-icon fas fa-university"></i>
-                <span class="nav-label">Bancos</span>
+
+                <span class="nav-label">
+                    Bancos
+                </span>
+
             </button>
 
 
-            <button class="nav-btn" data-tab="categories">
+            <button
+                class="nav-btn"
+                data-tab="categories"
+            >
+
                 <i class="nav-icon fas fa-list"></i>
-                <span class="nav-label">Categ.</span>
+
+                <span class="nav-label">
+                    Categ.
+                </span>
+
             </button>
 
 
-            <button class="nav-btn" data-tab="charts">
+            <button
+                class="nav-btn"
+                data-tab="charts"
+            >
+
                 <i class="nav-icon fas fa-chart-bar"></i>
-                <span class="nav-label">Análise</span>
+
+                <span class="nav-label">
+                    Análise
+                </span>
+
             </button>
 
 
-            <button class="nav-btn" data-tab="data-db">
+            <button
+                class="nav-btn"
+                data-tab="data-db"
+            >
+
                 <i class="nav-icon fas fa-cog"></i>
-                <span class="nav-label">Config</span>
+
+                <span class="nav-label">
+                    Config
+                </span>
+
             </button>
 
         </nav>
@@ -435,71 +649,134 @@
     </div>
 
 
+    <!-- =====================================================
+         ADD TRANSACTION MODAL
+         ===================================================== -->
 
+    <div
+        class="tx-modal"
+        id="txModal"
+    >
 
-    <!-- ADD TRANSACTION MODAL -->
-    <div class="tx-modal" id="txModal">
+        <div
+            class="tx-modal-backdrop"
+            id="txModalBackdrop"
+        ></div>
 
-        <div class="tx-modal-backdrop" id="txModalBackdrop"></div>
 
         <div class="tx-modal-sheet">
 
+
+            <!-- HEADER -->
             <div class="tx-modal-header">
-                <button class="tx-modal-close" id="txModalClose">
+
+                <button
+                    class="tx-modal-close"
+                    id="txModalClose"
+                >
                     <i class="fas fa-times"></i>
                 </button>
 
+
                 <div>
-                    <span class="tx-modal-kicker">Novo registro</span>
-                    <h3 id="txModalTitle">Escolha uma conta</h3>
+
+                    <span class="tx-modal-kicker">
+                        Novo registro
+                    </span>
+
+                    <h3 id="txModalTitle">
+                        Escolha uma conta
+                    </h3>
+
                 </div>
 
-                <div class="tx-step" id="txStep">1/4</div>
+
+                <div
+                    class="tx-step"
+                    id="txStep"
+                >
+                    1/3
+                </div>
+
             </div>
 
 
-            <!-- STEP 1: CONTA -->
-            <div class="tx-step-content active" id="txStepAccount">
+            <!-- =================================================
+                 STEP 1 - CONTA
+                 ================================================= -->
+
+            <div
+                class="tx-step-content active"
+                id="txStepAccount"
+            >
 
                 <p class="tx-modal-description">
                     Onde esse movimento aconteceu?
                 </p>
 
-                <div class="wallet-stack" id="txAccounts"></div>
 
-            </div>
+                <div
+                    class="wallet-stack"
+                    id="txAccounts"
+                ></div>
 
 
-            <!-- STEP 2: TIPO -->
-            <div class="tx-step-content" id="txStepType">
+                <!--
+                    APARECE AUTOMATICAMENTE
+                    DEPOIS QUE UMA CONTA É SELECIONADA
+                -->
 
-                <p class="tx-modal-description">
-                    Qual tipo de movimento?
-                </p>
+                <div
+                    class="tx-type-chooser"
+                    id="txTypeChooser"
+                    style="display:none;"
+                >
 
-                <div class="tx-type-buttons">
+                    <button
+                        class="tx-type-btn tx-type-debit"
+                        data-tx-type="expense"
+                    >
 
-                    <button class="tx-type-btn expense" data-tx-type="expense">
                         <span class="tx-type-icon">
                             <i class="fas fa-arrow-down"></i>
                         </span>
 
                         <span>
-                            <strong>Débito</strong>
-                            <small>Dinheiro saindo</small>
+
+                            <strong>
+                                Débito
+                            </strong>
+
+                            <small>
+                                Dinheiro saindo da conta
+                            </small>
+
                         </span>
+
                     </button>
 
 
-                    <button class="tx-type-btn income" data-tx-type="income">
+                    <button
+                        class="tx-type-btn tx-type-credit"
+                        data-tx-type="credit"
+                    >
+
                         <span class="tx-type-icon">
-                            <i class="fas fa-arrow-up"></i>
+                            <i class="fas fa-credit-card"></i>
                         </span>
 
                         <span>
-                            <strong>Crédito</strong>
-                            <small>Dinheiro entrando</small>
+
+                            <strong>
+                                Crédito
+                            </strong>
+
+                            <small>
+                                Adicionar à fatura
+                            </small>
+
                         </span>
+
                     </button>
 
                 </div>
@@ -507,78 +784,192 @@
             </div>
 
 
-            <!-- STEP 3: VALOR -->
-            <div class="tx-step-content" id="txStepAmount">
+            <!-- =================================================
+                 STEP 2 - VALOR
+                 ================================================= -->
+
+            <div
+                class="tx-step-content"
+                id="txStepAmount"
+            >
 
                 <p class="tx-modal-description">
                     Quanto?
                 </p>
 
-                <div class="tx-amount-display" id="txAmountDisplay">
+
+                <div
+                    class="tx-amount-display"
+                    id="txAmountDisplay"
+                >
                     R$ 0,00
                 </div>
 
+
                 <div class="tx-keypad">
 
-                    <button data-key="1">1</button>
-                    <button data-key="2">2</button>
-                    <button data-key="3">3</button>
+                    <button data-key="1">
+                        1
+                    </button>
 
-                    <button data-key="4">4</button>
-                    <button data-key="5">5</button>
-                    <button data-key="6">6</button>
+                    <button data-key="2">
+                        2
+                    </button>
 
-                    <button data-key="7">7</button>
-                    <button data-key="8">8</button>
-                    <button data-key="9">9</button>
+                    <button data-key="3">
+                        3
+                    </button>
 
-                    <button data-key="00">00</button>
-                    <button data-key="0">0</button>
+
+                    <button data-key="4">
+                        4
+                    </button>
+
+                    <button data-key="5">
+                        5
+                    </button>
+
+                    <button data-key="6">
+                        6
+                    </button>
+
+
+                    <button data-key="7">
+                        7
+                    </button>
+
+                    <button data-key="8">
+                        8
+                    </button>
+
+                    <button data-key="9">
+                        9
+                    </button>
+
+
+                    <button data-key="00">
+                        00
+                    </button>
+
+                    <button data-key="0">
+                        0
+                    </button>
+
                     <button data-key="backspace">
                         <i class="fas fa-backspace"></i>
                     </button>
 
                 </div>
 
-                <button class="tx-next-btn" id="txAmountNext">
+
+                <button
+                    class="tx-next-btn"
+                    id="txAmountNext"
+                >
+
                     <i class="fas fa-chevron-right"></i>
+
                 </button>
 
             </div>
 
 
-            <!-- STEP 4: CATEGORIA -->
-            <div class="tx-step-content" id="txStepCategory">
+            <!-- =================================================
+                 STEP 3 - CATEGORIA
+                 ================================================= -->
+
+            <div
+                class="tx-step-content"
+                id="txStepCategory"
+            >
 
                 <p class="tx-modal-description">
-                    Categoria
+                    Escolha uma categoria
                 </p>
 
-                <div class="wallet-stack category-stack" id="txCategories"></div>
 
-                <div class="tx-description-wrap">
+                <div
+                    class="wallet-stack-cat"
+                    id="txCategories"
+                ></div>
 
-                    <input type="text" id="txDescription" class="tx-description-input"
-                        placeholder="Descrição (opcional)" maxlength="120" autocomplete="off" />
+
+                <!--
+                    FICA ESCONDIDO ATÉ O USUÁRIO
+                    CLICAR NO BOTÃO >
+                -->
+
+                <div
+                    class="tx-description-wrap"
+                    id="txDescriptionWrap"
+                    style="display:none;"
+                >
+
+                    <label for="txDescription">
+
+                        Descrição
+
+                        <span>
+                            (opcional)
+                        </span>
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="txDescription"
+                        placeholder="Ex: Compra no mercado"
+                        maxlength="120"
+                        autocomplete="off"
+                    />
 
                 </div>
 
-                <button class="tx-send-btn" id="txSend">
+
+                <!--
+                    PRIMEIRO:
+                    >
+
+                    DEPOIS:
                     Enviar
-                    <i class="fas fa-paper-plane"></i>
+                -->
+
+                <button
+                    class="tx-next-btn"
+                    id="txCategoryNext"
+                    disabled
+                >
+
+                    <i class="fas fa-chevron-right"></i>
+
                 </button>
 
             </div>
 
         </div>
+
     </div>
 
 
+    <!-- SCRIPTS -->
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 
-    <script type="module" src="firebase.js"></script>
-    <script type="module" src="init-db.js"></script>
-    <script type="module" src="index.js"></script>
+    <script
+        type="module"
+        src="firebase.js"
+    ></script>
+
+    <script
+        type="module"
+        src="init-db.js"
+    ></script>
+
+    <script
+        type="module"
+        src="index.js"
+    ></script>
 
 </body>
 
