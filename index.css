@@ -70,32 +70,41 @@ body {
     position: relative;
     min-height: 100dvh;
     max-width: 430px;
-    margin: 0 ;
+    margin: 0;
     background: var(--bg);
     padding-top: 70px;
     z-index: 1;
-  
+
 }
+
 .bg-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    /* Adiciona uma cor preta de fundo JUNTO com a imagem */
-    background-color: rgba(0, 0, 0, 0.6); /* 0.6 controla a escuridão (de 0 a 1) */
-    background-image: url('img/bg.jpg');
-    background-size: cover;
-    /* Faz a mágica de misturar a imagem com a cor preta */
-    background-blend-mode: multiply; 
-    z-index: 0;
-    pointer-events: none;
+    display: none;
+}
+
+@media (min-width:430px) {
+    .bg-overlay {
+        position: fixed;
+        display: flex;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        /* Adiciona uma cor preta de fundo JUNTO com a imagem */
+        background-color: rgba(0, 0, 0, 0.6);
+        /* 0.6 controla a escuridão (de 0 a 1) */
+        background-image: url('img/bg.jpg');
+        background-size: cover;
+        /* Faz a mágica de misturar a imagem com a cor preta */
+        background-blend-mode: multiply;
+        z-index: 0;
+        pointer-events: none;
+    }
 }
 
 
 
 .app-header {
-    position:fixed;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -793,9 +802,10 @@ body.light .legend-dot {
     -webkit-tap-highlight-color: transparent;
     position: relative;
 }
+
 .nav-plus {
     position: fixed;
-    bottom: 80px;
+    bottom: 150%;
     right: 15px;
     width: 50px;
     height: 50px;
@@ -804,17 +814,20 @@ body.light .legend-dot {
     transition: transform 0.2s;
 
 }
+
 .nav-plus:hover .nav-plus img:hover {
     transform: scale(1.12);
     width: 100px;
 }
+
 .nav-plus:active {
     scale: 0.9;
     transform: rotate(-90deg);
 }
+
 .nav-plus img {
     width: 100%;
-    
+
 
 }
 
