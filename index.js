@@ -64,9 +64,12 @@ const DATA_DB_CONFIG = {
     }
 };
 
-let theme = localStorage.getItem("krona-theme") || "dark";
+let theme = window.matchMedia("(prefers-color-scheme: light)").matches
+    ? "light"
+    : "dark";
 let activeTab = "home";
 let activeChartType = "monthly";
+const systemTheme = window.matchMedia("(prefers-color-scheme: light)");
 let openAccountId = null;
 let dataDbOpenType = null;
 let dataDbDirty = false;
@@ -115,8 +118,8 @@ function getAccount(id) {
 }
 
 function txRow(tx) {
-    const category = getCategory(tx.categoryId);
-    const account = getAccount(tx.accountId);
+    const category = getCategory(tx.category);
+    const account = getAccount(tx.account);
 
     const icon = category?.icon || "question";
     const color = category?.color || "#999";
@@ -130,7 +133,7 @@ function txRow(tx) {
             </div>
 
             <div class="tx-info">
-                <div class="tx-desc">${escapeHtml(tx.description || "Sem descrição")}</div>
+                <div class="tx-desc">${escapeHtml(tx.desc || "Sem descrição")}</div>
                 <div class="tx-sub">
                     <span class="tx-cat">${escapeHtml(category?.name || "Sem categoria")}</span>
                     <span class="tx-time">${fmtDate(tx.date)} · ${escapeHtml(account?.name || "Conta")}</span>
@@ -145,12 +148,15 @@ function txRow(tx) {
 }
 
 function applyTheme() {
-    document.body.classList.toggle("light", theme === "light");
-    localStorage.setItem("krona-theme", theme);
+    theme = systemTheme.matches ? "light" : "dark";
 
-    const button = $("themeToggle");
-    if (button) button.textContent = theme === "light" ? "🌙" : "☀️";
+    document.body.classList.toggle("light", theme === "light");
 }
+
+systemTheme.addEventListener("change", () => {
+    applyTheme();
+    refreshAll();
+});
 
 function chartTextColor() {
     return document.body.classList.contains("light")
@@ -281,13 +287,13 @@ function getPieData() {
     TRANSACTIONS
         .filter((tx) => tx.type === "expense")
         .forEach((tx) => {
-            const id = String(tx.categoryId);
+            const id = String(tx.category);
             totals.set(id, (totals.get(id) || 0) + Number(tx.amount || 0));
         });
 
     return [...totals.entries()]
-        .map(([categoryId, value]) => ({
-            category: getCategory(categoryId),
+        .map(([category, value]) => ({
+            category: getCategory(category),
             value
         }))
         .filter((item) => item.category)
@@ -308,7 +314,7 @@ function buildPieChart() {
             labels: data.map((item) => item.category.name),
             datasets: [{
                 data: data.map((item) => item.value),
-                backgroundColor: data.map((_, index) => PIE_COLORS[index % PIE_COLORS.length]),
+                backgroundColor: data.map((item) => item.category.color),
                 borderWidth: 0
             }]
         },
@@ -330,7 +336,7 @@ function buildPieChart() {
 
             return `
                 <div class="pie-row">
-                    <span class="pie-dot" style="background:${PIE_COLORS[index % PIE_COLORS.length]}"></span>
+                    <span class="pie-dot" style="background:${item.category.color}"></span>
                     <span class="pie-icon" style="color:${item.category.color}">
                         <i class="fas fa-${escapeHtml(item.category.icon)}"></i>
                     </span>
@@ -384,7 +390,7 @@ function renderAccounts() {
     }
 
     container.innerHTML = ACCOUNTS.map((account) => {
-        const accountTx = TRANSACTIONS.filter((tx) => String(tx.accountId) === String(account.id));
+        const accountTx = TRANSACTIONS.filter((tx) => String(tx.account) === String(account.id));
         const income = accountTx
             .filter((tx) => tx.type === "income")
             .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
@@ -398,7 +404,11 @@ function renderAccounts() {
             <div class="account-card">
                 <div class="account-header" data-account-id="${escapeHtml(account.id)}">
                     <div class="account-dot-wrap" style="background:${escapeHtml(account.color || "#C855FF")}22">
-                        <span class="account-dot" style="background:${escapeHtml(account.color || "#C855FF")}"></span>
+                        <img
+                            class="account-logo"
+                            src="assets/${account.id}.png"
+                            alt="${account.name} logo"
+                        >
                     </div>
 
                     <div class="account-info">
@@ -407,7 +417,9 @@ function renderAccounts() {
                     </div>
 
                     <div class="account-right">
-                        <div class="account-balance">${fmt(account.balance)}</div>
+                        <div class="account-balance" style=" color:${account.color}; text-shadow:${account ? `0 0 12px ${account.color}80` : "none"} " >
+                            ${fmt(account.balance)}
+                        </div>
                         <div class="account-arrow">${open ? "▲" : "▼"}</div>
                     </div>
                 </div>
@@ -429,9 +441,9 @@ function renderAccounts() {
 
                     <div class="tx-list">
                         ${accountTx.length
-                            ? [...accountTx].sort((a,b) => String(b.date).localeCompare(String(a.date))).slice(0,5).map(txRow).join("")
-                            : `<div class="data-db-empty">Nenhum registro nesta conta.</div>`
-                        }
+                ? [...accountTx].sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 5).map(txRow).join("")
+                : `<div class="data-db-empty">Nenhum registro nesta conta.</div>`
+            }
                     </div>
                 </div>
             </div>
@@ -449,53 +461,234 @@ function renderAccounts() {
 }
 
 function renderCategories() {
-    const expenses = CATEGORIES.filter((category) => category.type === "expense");
-    const incomes = CATEGORIES.filter((category) => category.type === "income");
+    const expenses = CATEGORIES.filter(
+        (category) => category.type === "expense"
+    );
+
+    const incomes = CATEGORIES.filter(
+        (category) => category.type === "income"
+    );
 
     const expenseTotals = new Map();
     const incomeTotals = new Map();
 
     TRANSACTIONS.forEach((tx) => {
-        const id = String(tx.categoryId);
-        const map = tx.type === "income" ? incomeTotals : expenseTotals;
-        map.set(id, (map.get(id) || 0) + Number(tx.amount || 0));
+        const id = String(tx.category);
+
+        const map =
+            tx.type === "income"
+                ? incomeTotals
+                : expenseTotals;
+
+        map.set(
+            id,
+            (map.get(id) || 0) + Number(tx.amount || 0)
+        );
     });
 
-    const expenseMax = Math.max(...expenses.map((category) => expenseTotals.get(String(category.id)) || 0), 1);
+    /*
+     * ─────────────────────────────
+     * DESPESAS
+     * ─────────────────────────────
+     */
 
-    $("expenseCategories").innerHTML = expenses.map((category) => {
-        const amount = expenseTotals.get(String(category.id)) || 0;
-        const width = Math.max(2, (amount / expenseMax) * 100);
+    const expenseData = [...expenseTotals.entries()]
+        .map(([id, total]) => ({
+            category: getCategory(id),
+            total
+        }))
+        .filter((item) => item.category && Math.abs(item.total) > 0)
+        .sort((a, b) => Math.abs(b.total) - Math.abs(a.total));
 
-        return `
-            <div class="cat-row">
-                <div class="cat-top">
-                    <span class="cat-icon" style="color:${escapeHtml(category.color)}">
-                        <i class="fas fa-${escapeHtml(category.icon)}"></i>
+    const maxExpense =
+        expenseData.length
+            ? Math.max(
+                ...expenseData.map((item) => Math.abs(item.total)),
+                1
+            )
+            : 1;
+
+    const expEl = $("expenseCategories");
+
+    expEl.style.cssText =
+        "display:flex;flex-direction:column;gap:8px";
+
+    expEl.innerHTML = expenseData
+        .map((item, index) => {
+            const category = item.category;
+            const amount = item.total;
+
+            /*
+             * Intensidade baseada na posição.
+             *
+             * Primeiro = vermelho forte
+             * Últimos = vermelho mais suave
+             */
+
+            const intensity =
+                expenseData.length <= 1
+                    ? 1
+                    : 1 - (index / (expenseData.length - 1)) * 0.55;
+
+            const red = Math.round(255 * intensity);
+            const pink = Math.round(45 * intensity);
+            const blue = Math.round(107 * intensity);
+
+            const color =
+                `rgb(${red}, ${pink}, ${blue})`;
+
+            /*
+             * A barra continua proporcional ao valor.
+             */
+
+            const pct =
+                maxExpense > 0
+                    ? (Math.abs(amount) / maxExpense) * 100
+                    : 0;
+
+            return `
+                <div class="cat-row">
+
+                    <div class="cat-top">
+
+                        <i
+                            class="cat-icon ${escapeHtml(
+                category.icon || "fas fa-question"
+            )}"
+                            style="
+                                color:${color};
+                                text-shadow:0 0 7px ${color}55;
+                            "
+                        ></i>
+
+                        <span class="cat-name">
+                            ${escapeHtml(category.name)}
+                        </span>
+
+                        <span
+                            class="cat-amount"
+                            style="
+                                color:${color};
+                                text-shadow:0 0 8px ${color}66;
+                            "
+                        >
+                            ${fmt(amount)}
+                        </span>
+
+                    </div>
+
+                    <div class="cat-bar-track">
+
+                        <div
+                            class="cat-bar-fill"
+                            style="
+                                width:${Math.max(2, pct)}%;
+                                background:${color};
+                                box-shadow:0 0 6px ${color}66;
+                            "
+                        ></div>
+
+                    </div>
+
+                </div>
+            `;
+        })
+        .join("");
+
+
+    /*
+     * ─────────────────────────────
+     * ENTRADAS
+     * ─────────────────────────────
+     */
+
+    const incomeData = [...incomeTotals.entries()]
+        .map(([id, total]) => ({
+            category: getCategory(id),
+            total
+        }))
+        .filter((item) => item.category && Math.abs(item.total) > 0)
+        .sort((a, b) => Math.abs(b.total) - Math.abs(a.total));
+
+    const maxIncome =
+        incomeData.length
+            ? Math.max(
+                ...incomeData.map((item) => item.total),
+                1
+            )
+            : 1;
+
+    const incEl = $("incomeCategories");
+
+    incEl.style.cssText =
+        "display:flex;flex-direction:column;gap:8px";
+
+    incEl.innerHTML = incomeData
+        .map((item, index) => {
+            const category = item.category;
+            const amount = item.total;
+
+            /*
+             * Maior entrada = verde mais forte.
+             * As seguintes vão ficando mais suaves.
+             */
+
+            const intensity =
+                incomeData.length <= 1
+                    ? 1
+                    : 1 - (index / (incomeData.length - 1)) * 0.45;
+
+            const green = Math.round(255 * intensity);
+            const red = Math.round(57 * intensity);
+            const blue = Math.round(20 * intensity);
+
+            const color =
+                `rgb(${red}, ${green}, ${blue})`;
+
+            const pct =
+                maxIncome > 0
+                    ? (amount / maxIncome) * 100
+                    : 0;
+
+            return `
+                <div class="income-row">
+
+                    <i
+                        class="cat-icon ${escapeHtml(
+                category.icon || "fas fa-question"
+            )}"
+                        style="
+                            color:${color};
+                            text-shadow:0 0 7px ${color}55;
+                        "
+                    ></i>
+
+                    <span
+                        class="cat-name"
+                        style="
+                            flex:1;
+                            font-size:13px;
+                            font-weight:500;
+                            color:var(--text);
+                        "
+                    >
+                        ${escapeHtml(category.name)}
                     </span>
-                    <span class="cat-name">${escapeHtml(category.name)}</span>
-                    <span class="cat-amount red-glow">${fmt(amount)}</span>
-                </div>
-                <div class="cat-bar-track">
-                    <div class="cat-bar-fill" style="width:${width}%;background:${escapeHtml(category.color)}"></div>
-                </div>
-            </div>
-        `;
-    }).join("");
 
-    $("incomeCategories").innerHTML = incomes.map((category) => {
-        const amount = incomeTotals.get(String(category.id)) || 0;
+                    <span
+                        class="cat-amount"
+                        style="
+                            color:${color};
+                            text-shadow:0 0 8px ${color}66;
+                        "
+                    >
+                        +${fmt(amount)}
+                    </span>
 
-        return `
-            <div class="income-row">
-                <span class="cat-icon" style="color:${escapeHtml(category.color)}">
-                    <i class="fas fa-${escapeHtml(category.icon)}"></i>
-                </span>
-                <span class="cat-name">${escapeHtml(category.name)}</span>
-                <span class="cat-amount green-glow">${fmt(amount)}</span>
-            </div>
-        `;
-    }).join("");
+                </div>
+            `;
+        })
+        .join("");
 }
 
 function renderCharts() {
@@ -798,14 +991,8 @@ async function initApp(user) {
         month: "short",
         year: "numeric"
     }).replace(".", "")
-    .replace(/^\w/, (char) => char.toUpperCase());
+        .replace(/^\w/, (char) => char.toUpperCase());
 }
-
-$("themeToggle").addEventListener("click", () => {
-    theme = theme === "dark" ? "light" : "dark";
-    applyTheme();
-    refreshAll();
-});
 
 document.querySelectorAll(".nav-btn").forEach((button) => {
     button.addEventListener("click", () => setTab(button.dataset.tab));

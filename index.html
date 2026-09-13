@@ -26,20 +26,19 @@
 </head>
 
 <body class="dark">
-    <div class="bg-overlay" ></div>
+    <div class="bg-overlay"></div>
     <div class="app">
 
         <!-- Header -->
         <header class="app-header">
             <span class="logo">Krona</span>
 
-            
-                <span class="month-label" id="monthLabel">Set 2026</span>
 
-                <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
-                    ☀️
-                </button>
-            
+            <span class="month-label" id="monthLabel">Set 2026</span>
+
+
+            <i class="fas fa-bars" style="color: blueviolet; font-size: 24px;"></i>
+
         </header>
 
         <!-- Page title -->
@@ -382,7 +381,7 @@
         <nav class="bottom-nav">
             <button class="nav-plus" id="addTxBtn">
                 <img src="img/plus.png" alt="Adicionar" />
-                
+
             </button>
             <button class="nav-btn active" data-tab="home">
                 <i class="nav-icon fas fa-home"></i>
@@ -417,11 +416,13 @@
 
     </div>
 
-    
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="init-db.js"></script>
     <script type="module" src="index.js"></script>
 
 </body>

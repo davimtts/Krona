@@ -395,7 +395,7 @@ body {
 .tx-time {
     font-size: 11px;
     color: var(--text-dim);
-    margin: 0 50px;
+    text-align: center;
 }
 
 .tx-info {
