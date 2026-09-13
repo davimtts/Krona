@@ -1,0 +1,222 @@
+/* auth.css */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #050505;
+    --card: rgba(255,255,255,.035);
+    --border: rgba(255,255,255,.08);
+    --text: #fff;
+    --muted: rgba(255,255,255,.42);
+    --purple: #C855FF;
+    --green: #39FF14;
+    --red: #FF2D6B;
+    --font-num: 'Orbitron', monospace;
+    --font-body: 'Outfit', sans-serif;
+}
+
+html, body {
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+}
+
+body {
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    overflow-x: hidden;
+}
+
+.auth-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(200,85,255,.12), transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(57,255,20,.06), transparent 28%),
+        #050505;
+}
+
+.auth-app {
+    position: relative;
+    width: 100%;
+    max-width: 390px;
+    z-index: 1;
+}
+
+.auth-brand {
+    text-align: center;
+    margin-bottom: 26px;
+}
+
+.auth-logo {
+    font-family: var(--font-num);
+    color: var(--purple);
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-shadow: 0 0 14px rgba(200,85,255,.55);
+}
+
+.auth-subtitle {
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.auth-card {
+    border: 1px solid var(--border);
+    background: var(--card);
+    border-radius: 20px;
+    padding: 22px;
+    backdrop-filter: blur(18px);
+}
+
+.auth-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    padding: 4px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255,255,255,.02);
+}
+
+.auth-tab {
+    border: 0;
+    border-radius: 9px;
+    padding: 10px;
+    color: var(--muted);
+    background: transparent;
+    font: 500 12px var(--font-body);
+    cursor: pointer;
+}
+
+.auth-tab.active {
+    color: var(--purple);
+    background: rgba(200,85,255,.12);
+    box-shadow: inset 0 0 0 1px rgba(200,85,255,.2);
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.auth-form.hidden {
+    display: none;
+}
+
+.auth-title {
+    font: 700 17px var(--font-num);
+    margin-bottom: 2px;
+}
+
+.auth-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.auth-field label {
+    color: var(--muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.auth-field input {
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    outline: 0;
+    background: rgba(255,255,255,.025);
+    color: var(--text);
+    font: 400 13px var(--font-body);
+}
+
+.auth-field input:focus {
+    border-color: rgba(200,85,255,.55);
+    box-shadow: 0 0 14px rgba(200,85,255,.08);
+}
+
+.auth-primary,
+.auth-google {
+    height: 44px;
+    border-radius: 10px;
+    cursor: pointer;
+    font: 600 12px var(--font-body);
+    transition: transform .15s, opacity .15s;
+}
+
+.auth-primary:active,
+.auth-google:active {
+    transform: scale(.98);
+}
+
+.auth-primary {
+    border: 1px solid rgba(200,85,255,.4);
+    background: rgba(200,85,255,.14);
+    color: var(--purple);
+}
+
+.auth-google {
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.04);
+    color: var(--text);
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 10px;
+    margin: 2px 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+.auth-message {
+    min-height: 16px;
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--muted);
+}
+
+.auth-message.error {
+    color: var(--red);
+}
+
+.auth-message.success {
+    color: var(--green);
+}
+
+.auth-loading {
+    opacity: .55;
+    pointer-events: none;
+}
+
+@media (max-width: 360px) {
+    body { padding: 14px; }
+    .auth-card { padding: 18px; }
+}

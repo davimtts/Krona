@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#050505">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Krona">
+    <title>Krona · Acesso</title>
+    <link rel="icon" type="image/png" href="img/logo.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+    <div class="auth-bg"></div>
+
+    <main class="auth-app">
+        <div class="auth-brand">
+            <div class="auth-logo">KRONA</div>
+            <p class="auth-subtitle">Seu dinheiro, organizado.</p>
+        </div>
+
+        <section class="auth-card">
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-mode="login">Entrar</button>
+                <button class="auth-tab" data-mode="register">Criar conta</button>
+            </div>
+
+            <form class="auth-form" id="loginForm">
+                <h1 class="auth-title">Entrar</h1>
+
+                <div class="auth-field">
+                    <label for="loginEmail">E-mail</label>
+                    <input id="loginEmail" type="email" autocomplete="email" required>
+                </div>
+
+                <div class="auth-field">
+                    <label for="loginPassword">Senha</label>
+                    <input id="loginPassword" type="password" autocomplete="current-password" required>
+                </div>
+
+                <button class="auth-primary" type="submit">Entrar</button>
+
+                <div class="auth-divider"><span>ou</span></div>
+
+                <button class="auth-google" id="googleLogin" type="button">Continuar com Google</button>
+                <p class="auth-message" id="loginMessage"></p>
+            </form>
+
+            <form class="auth-form hidden" id="registerForm">
+                <h1 class="auth-title">Criar conta</h1>
+
+                <div class="auth-field">
+                    <label for="registerName">Nome</label>
+                    <input id="registerName" type="text" autocomplete="name" required>
+                </div>
+
+                <div class="auth-field">
+                    <label for="registerEmail">E-mail</label>
+                    <input id="registerEmail" type="email" autocomplete="email" required>
+                </div>
+
+                <div class="auth-field">
+                    <label for="registerPassword">Senha</label>
+                    <input id="registerPassword" type="password" minlength="6" autocomplete="new-password" required>
+                </div>
+
+                <button class="auth-primary" type="submit">Criar conta</button>
+
+                <div class="auth-divider"><span>ou</span></div>
+
+                <button class="auth-google" id="googleRegister" type="button">Criar com Google</button>
+                <p class="auth-message" id="registerMessage"></p>
+            </form>
+        </section>
+    </main>
+
+    <script type="module" src="auth.js"></script>
+</body>
+</html>
