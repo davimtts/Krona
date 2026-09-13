@@ -10,8 +10,7 @@ import {
     signInWithEmailAndPassword,
     GoogleAuthProvider,
     signInWithPopup,
-    signInWithRedirect,
-    onAuthStateChanged
+    signInWithRedirect
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
 import {
@@ -90,7 +89,7 @@ const DEFAULT_ACCOUNTS = [
         id: "nubank",
         name: "Nubank",
         bank: "Nubank",
-        balance: 275.50,
+        balance: 0,
         color: "#C855FF",
         logo: "img/nubank.png"
     },
@@ -98,7 +97,7 @@ const DEFAULT_ACCOUNTS = [
         id: "itau",
         name: "Itaú",
         bank: "Itaú",
-        balance: 478.00,
+        balance: 0,
         color: "#ff8800",
         logo: "img/itau.png"
     },
@@ -106,7 +105,7 @@ const DEFAULT_ACCOUNTS = [
         id: "mp",
         name: "Mercado Pago",
         bank: "Mercado Pago",
-        balance: 100.30,
+        balance: 0,
         color: "#ffd900",
         logo: "img/mp.png"
     }
@@ -192,80 +191,7 @@ const DEFAULT_CATEGORIES = [
     }
 ];
 
-const DEFAULT_TRANSACTIONS = [
-    {
-        id: "t1",
-        accountId: "nubank",
-        type: "income",
-        categoryId: "1",
-        amount: 2340,
-        date: "2026-09-02",
-        description: "Salário"
-    },
-    {
-        id: "t2",
-        accountId: "itau",
-        type: "expense",
-        categoryId: "3",
-        amount: 86.40,
-        date: "2026-09-03",
-        description: "Mercado"
-    },
-    {
-        id: "t3",
-        accountId: "nubank",
-        type: "expense",
-        categoryId: "5",
-        amount: 39.90,
-        date: "2026-09-04",
-        description: "Netflix"
-    },
-    {
-        id: "t4",
-        accountId: "mp",
-        type: "expense",
-        categoryId: "4",
-        amount: 22.50,
-        date: "2026-09-05",
-        description: "Uber"
-    },
-    {
-        id: "t5",
-        accountId: "itau",
-        type: "expense",
-        categoryId: "7",
-        amount: 1687.60,
-        date: "2026-09-06",
-        description: "Aluguel"
-    },
-    {
-        id: "t6",
-        accountId: "nubank",
-        type: "expense",
-        categoryId: "3",
-        amount: 54.90,
-        date: "2026-09-07",
-        description: "Lanche"
-    },
-    {
-        id: "t7",
-        accountId: "mp",
-        type: "expense",
-        categoryId: "10",
-        amount: 45.00,
-        date: "2026-09-08",
-        description: "Lazer"
-    },
-    {
-        id: "t8",
-        accountId: "nubank",
-        type: "income",
-        categoryId: "2",
-        amount: 350,
-        date: "2026-09-10",
-        description: "Freelance"
-    }
-];
+const DEFAULT_TRANSACTIONS = [];
 
 // ======================================================
 // FIRESTORE - USUÁRIO
@@ -273,10 +199,11 @@ const DEFAULT_TRANSACTIONS = [
 
 async function ensureUserDocument(user, name = "") {
 
-    console.log("🔥 ensureUserDocument executado");
-    console.log("🔥 Criando/verificando users/" + user.uid);
-
-    const userRef = doc(db, "users", user.uid);
+    const userRef = doc(
+        db,
+        "users",
+        user.uid
+    );
 
     const snapshot = await getDoc(userRef);
 
@@ -291,42 +218,48 @@ async function ensureUserDocument(user, name = "") {
             updatedAt: serverTimestamp()
         });
 
-        console.log("Krona: usuário criado no Firestore.");
-
-    } else {
-
-        const existingData = snapshot.data();
-
-        await setDoc(
-            userRef,
-            {
-                name:
-                    name ||
-                    user.displayName ||
-                    existingData.name ||
-                    "Usuário",
-
-                email:
-                    user.email ||
-                    existingData.email ||
-                    "",
-
-                photoURL:
-                    user.photoURL ||
-                    existingData.photoURL ||
-                    "",
-
-                updatedAt: serverTimestamp()
-            },
-            {
-                merge: true
-            }
+        console.log(
+            "Krona: usuário criado no Firestore."
         );
 
-        console.log("Krona: usuário atualizado no Firestore.");
+        await seedUserData(user.uid);
+
+        console.log(
+            "Krona: dados iniciais criados."
+        );
+
+        return;
     }
 
-    await seedUserData(user.uid);
+    await setDoc(
+        userRef,
+        {
+            name:
+                name ||
+                user.displayName ||
+                snapshot.data().name ||
+                "Usuário",
+
+            email:
+                user.email ||
+                snapshot.data().email ||
+                "",
+
+            photoURL:
+                user.photoURL ||
+                snapshot.data().photoURL ||
+                "",
+
+            updatedAt: serverTimestamp()
+        },
+        {
+            merge: true
+        }
+    );
+
+    console.log(
+        "Krona: usuário já existe no Firestore."
+    );
 }
 
 // ======================================================
@@ -437,6 +370,8 @@ loginForm.addEventListener(
 
         event.preventDefault();
 
+        console.log("🔥 LOGIN FORM EXECUTADO");
+
         const email =
             $("loginEmail").value.trim();
 
@@ -460,6 +395,20 @@ loginForm.addEventListener(
                     email,
                     password
                 );
+
+            console.log(
+                "🔥 LOGIN AUTH CONCLUÍDO"
+            );
+
+            console.log(
+                "🔥 USER:",
+                result.user
+            );
+
+            console.log(
+                "🔥 UID:",
+                result.user.uid
+            );
 
             await afterLogin(
                 result.user
@@ -496,6 +445,8 @@ registerForm.addEventListener(
     async (event) => {
 
         event.preventDefault();
+
+        console.log("🔥 REGISTER FORM EXECUTADO");
 
         const name =
             $("registerName").value.trim();
@@ -635,15 +586,3 @@ $("googleRegister").addEventListener(
 // VERIFICAÇÃO DE AUTENTICAÇÃO
 // ======================================================
 
-onAuthStateChanged(
-    auth,
-    (user) => {
-
-        if (user) {
-
-            window.location.replace(
-                "index.html"
-            );
-        }
-    }
-);

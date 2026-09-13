@@ -2517,9 +2517,7 @@ function renderTxAccounts() {
 
 
                 return `
-                    <div
-                        class="wallet-card"
-                        data-account-id="${escapeHtml(
+                    <div class="wallet-card" data-account-id="${escapeHtml(
                     account.id
                 )}"
                         style="
@@ -2991,7 +2989,6 @@ function renderTxCategories() {
                         <div
                             class="
                                 category-card
-                                wallet-card
                             "
 
                             data-category-id="${escapeHtml(
