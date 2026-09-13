@@ -15,7 +15,8 @@ import {
     updateDoc,
     addDoc,
     deleteDoc,
-    serverTimestamp
+    serverTimestamp,
+    runTransaction
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const ACCOUNTS = [];
@@ -83,6 +84,12 @@ let unsubscribeCategories = null;
 let unsubscribeTransactions = null;
 
 let currentUser = null;
+
+let txSelectedAccount = null;
+let txSelectedType = null;
+let txSelectedCategory = null;
+let txAmountCents = 0;
+let txStep = 1;
 
 const $ = (id) => document.getElementById(id);
 
@@ -368,7 +375,7 @@ function renderHome() {
 
     $("totalBalance").textContent = fmt(balance);
     $("totalIncome").textContent = `+${fmt(income)}`;
-    $("totalExpense").textContent = `-${fmt(expense)}`;
+    $("totalExpense").textContent = `${fmt(expense)}`;
 
     const recent = [...TRANSACTIONS]
         .sort((a, b) => String(b.date).localeCompare(String(a.date)))
@@ -979,6 +986,652 @@ function startFirestoreListeners(user) {
     );
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   NOVA TRANSAÇÃO
+========================================================= */
+
+function openTxModal() {
+    if (!currentUser) return;
+
+    txSelectedAccount = null;
+    txSelectedType = null;
+    txSelectedCategory = null;
+    txAmountCents = 0;
+    txStep = 1;
+
+    $("txModal").classList.add("active");
+
+    renderTxAccounts();
+    showTxStep(1);
+
+    document.body.style.overflow = "hidden";
+}
+
+
+function closeTxModal() {
+    $("txModal").classList.remove("active");
+    document.body.style.overflow = "";
+
+    txSelectedAccount = null;
+    txSelectedType = null;
+    txSelectedCategory = null;
+    txAmountCents = 0;
+    txStep = 1;
+}
+
+
+function showTxStep(step) {
+    txStep = step;
+
+    document.querySelectorAll(".tx-step-content").forEach((element) => {
+        element.classList.remove("active");
+    });
+
+    const steps = {
+        1: "txStepAccount",
+        2: "txStepType",
+        3: "txStepAmount",
+        4: "txStepCategory"
+    };
+
+    const target = $(steps[step]);
+
+    if (target) {
+        target.classList.add("active");
+    }
+
+    $("txStep").textContent = `${step}/4`;
+
+    const titles = {
+        1: "Escolha uma conta",
+        2: "Tipo de movimento",
+        3: "Digite o valor",
+        4: "Escolha uma categoria"
+    };
+
+    $("txModalTitle").textContent = titles[step] || "Novo registro";
+}
+
+
+/* =========================================================
+   CARTÕES DE CONTA
+========================================================= */
+
+function renderTxAccounts() {
+    const container = $("txAccounts");
+
+    if (!ACCOUNTS.length) {
+        container.innerHTML = `
+            <div class="data-db-empty">
+                Nenhuma conta cadastrada.
+            </div>
+        `;
+        return;
+    }
+
+    container.classList.remove("expanded");
+
+    container.innerHTML = ACCOUNTS.map((account, index) => {
+
+        const color = account.color || "#C855FF";
+
+        return `
+            <div
+                class="wallet-card"
+                data-account-id="${escapeHtml(account.id)}"
+                style="
+                    background:
+                        linear-gradient(
+                            135deg,
+                            ${escapeHtml(color)},
+                            #080808
+                        );
+                "
+            >
+
+                <div class="wallet-card-top">
+
+                    <div
+                        class="wallet-card-logo"
+                        style="box-shadow:0 0 25px ${escapeHtml(color)}55"
+                    >
+                        <img
+                            src="assets/${escapeHtml(account.id)}.png"
+                            alt=""
+                            onerror="this.style.display='none';this.nextElementSibling.style.display='block';"
+                        >
+
+                        <i
+                            class="fas fa-university"
+                            style="display:none"
+                        ></i>
+                    </div>
+
+                    <span class="wallet-card-type">
+                        Conta
+                    </span>
+
+                </div>
+
+
+                <div class="wallet-card-info">
+
+                    <div class="wallet-card-name">
+                        ${escapeHtml(account.name)}
+                    </div>
+
+                    <div class="wallet-card-balance">
+                        ${fmt(account.balance)}
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+    }).join("");
+
+    container.querySelectorAll(".wallet-card").forEach((card) => {
+
+        card.addEventListener("click", () => {
+
+            const account = ACCOUNTS.find(
+                (item) =>
+                    String(item.id) ===
+                    String(card.dataset.accountId)
+            );
+
+            if (!account) return;
+
+            txSelectedAccount = account;
+
+            container.classList.add("expanded");
+
+            container.querySelectorAll(".wallet-card").forEach((item) => {
+                item.classList.remove("selected");
+                item.classList.add("hidden-card");
+            });
+
+            card.classList.remove("hidden-card");
+            card.classList.add("selected");
+
+            setTimeout(() => {
+                showTxStep(2);
+            }, 420);
+        });
+
+    });
+}
+
+
+/* =========================================================
+   TIPO
+========================================================= */
+
+document.querySelectorAll(".tx-type-btn").forEach((button) => {
+
+    button.addEventListener("click", () => {
+
+        txSelectedType = button.dataset.txType;
+
+        showTxStep(3);
+
+        updateTxAmountDisplay();
+    });
+
+});
+
+
+/* =========================================================
+   VALOR
+========================================================= */
+
+function updateTxAmountDisplay() {
+
+    const value = txAmountCents / 100;
+
+    $("txAmountDisplay").textContent = fmt(value);
+}
+
+
+function addTxNumber(value) {
+
+    if (value === "backspace") {
+
+        txAmountCents =
+            Math.floor(txAmountCents / 10);
+
+        updateTxAmountDisplay();
+
+        return;
+    }
+
+
+    if (value === "00") {
+
+        if (txAmountCents === 0) return;
+
+        txAmountCents =
+            txAmountCents * 100;
+
+    } else {
+
+        const digit = Number(value);
+
+        if (!Number.isInteger(digit)) return;
+
+        /*
+         * Limite de R$ 99.999.999,99
+         */
+        if (txAmountCents > 999999999) return;
+
+        txAmountCents =
+            txAmountCents * 10 + digit;
+    }
+
+
+    updateTxAmountDisplay();
+}
+
+
+document.querySelectorAll(".tx-keypad button").forEach((button) => {
+
+    button.addEventListener("click", () => {
+        addTxNumber(button.dataset.key);
+    });
+
+});
+
+
+$("txAmountNext").addEventListener("click", () => {
+
+    if (txAmountCents <= 0) {
+        alert("Digite um valor maior que zero.");
+        return;
+    }
+
+    renderTxCategories();
+
+    showTxStep(4);
+});
+
+
+/* =========================================================
+   CATEGORIAS
+========================================================= */
+
+function renderTxCategories() {
+
+    const container = $("txCategories");
+
+    const categories = CATEGORIES
+        .filter((category) => {
+
+            if (txSelectedType === "expense") {
+                return category.type === "expense";
+            }
+
+            if (txSelectedType === "income") {
+                return category.type === "income";
+            }
+
+            return false;
+
+        })
+        .sort((a, b) =>
+            String(a.name).localeCompare(String(b.name))
+        );
+
+
+    if (!categories.length) {
+
+        container.innerHTML = `
+            <div class="data-db-empty">
+                Nenhuma categoria disponível.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    container.classList.remove("expanded");
+
+    container.innerHTML = categories.map((category) => {
+
+        const color =
+            category.color ||
+            (txSelectedType === "income"
+                ? "#39FF14"
+                : "#FF2D6B");
+
+        return `
+            <div
+                class="category-card wallet-card"
+                data-category-id="${escapeHtml(category.id)}"
+                style="
+                    background:
+                        linear-gradient(
+                            135deg,
+                            ${escapeHtml(color)},
+                            #080808
+                        );
+                "
+            >
+
+                <div class="category-card-icon">
+
+                    <i class="fas fa-${escapeHtml(
+                        category.icon || "tag"
+                    )}"></i>
+
+                </div>
+
+                <div class="category-card-name">
+                    ${escapeHtml(category.name)}
+                </div>
+
+            </div>
+        `;
+
+    }).join("");
+
+
+    container.querySelectorAll(".category-card").forEach((card) => {
+
+        card.addEventListener("click", () => {
+
+            const category = CATEGORIES.find(
+                (item) =>
+                    String(item.id) ===
+                    String(card.dataset.categoryId)
+            );
+
+            if (!category) return;
+
+            txSelectedCategory = category;
+
+            container.classList.add("expanded");
+
+            container.querySelectorAll(".category-card").forEach((item) => {
+                item.classList.remove("selected");
+                item.classList.add("hidden-card");
+            });
+
+            card.classList.remove("hidden-card");
+            card.classList.add("selected");
+
+        });
+
+    });
+}
+
+
+/* =========================================================
+   ENVIAR
+========================================================= */
+
+async function sendTransaction() {
+
+    if (!currentUser) return;
+
+    if (!txSelectedAccount) {
+        alert("Selecione uma conta.");
+        return;
+    }
+
+    if (!txSelectedType) {
+        alert("Selecione o tipo.");
+        return;
+    }
+
+    if (!txSelectedCategory) {
+        alert("Selecione uma categoria.");
+        return;
+    }
+
+    if (txAmountCents <= 0) {
+        alert("Digite um valor maior que zero.");
+        return;
+    }
+
+
+    const amount = txAmountCents / 100;
+
+    const description =
+        $("txDescription").value.trim();
+
+
+    const accountRef = doc(
+        db,
+        "users",
+        currentUser.uid,
+        "accounts",
+        txSelectedAccount.id
+    );
+
+    const transactionCollection = collection(
+        db,
+        "users",
+        currentUser.uid,
+        "transactions"
+    );
+
+    const transactionRef = doc(transactionCollection);
+
+
+    const today = new Date();
+
+    const date =
+        today.getFullYear() +
+        "-" +
+        String(today.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(today.getDate()).padStart(2, "0");
+
+
+    const signedAmount =
+        txSelectedType === "income"
+            ? amount
+            : -amount;
+
+
+    const sendButton = $("txSend");
+
+    try {
+
+        sendButton.disabled = true;
+
+        sendButton.innerHTML = `
+            <i class="fas fa-spinner fa-spin"></i>
+            Salvando...
+        `;
+
+
+        await runTransaction(db, async (transaction) => {
+
+            const accountSnapshot =
+                await transaction.get(accountRef);
+
+
+            if (!accountSnapshot.exists()) {
+                throw new Error("Conta não encontrada.");
+            }
+
+
+            const accountData =
+                accountSnapshot.data();
+
+
+            const currentBalance =
+                Number(accountData.balance || 0);
+
+
+            const newBalance =
+                currentBalance + signedAmount;
+
+
+            /*
+             * 1. Cria o registro financeiro
+             */
+            transaction.set(transactionRef, {
+
+                account: txSelectedAccount.id,
+
+                category: txSelectedCategory.id,
+
+                type: txSelectedType,
+
+                amount: signedAmount,
+
+                desc: description,
+
+                date,
+
+                createdAt: serverTimestamp(),
+
+                updatedAt: serverTimestamp()
+
+            });
+
+
+            /*
+             * 2. Atualiza o saldo da conta
+             */
+            transaction.update(accountRef, {
+
+                balance: newBalance,
+
+                updatedAt: serverTimestamp()
+
+            });
+
+        });
+
+
+        closeTxModal();
+
+        $("txDescription").value = "";
+
+        txAmountCents = 0;
+
+        alert("Registro enviado com sucesso.");
+
+    } catch (error) {
+
+        console.error(
+            "Erro ao salvar transação:",
+            error
+        );
+
+        alert(
+            "Não foi possível salvar o registro."
+        );
+
+    } finally {
+
+        sendButton.disabled = false;
+
+        sendButton.innerHTML = `
+            Enviar
+            <i class="fas fa-paper-plane"></i>
+        `;
+    }
+}
+
+
+/* =========================================================
+   EVENTOS DO MODAL
+========================================================= */
+
+$("addTxBtn").addEventListener("click", () => {
+    openTxModal();
+});
+
+
+$("txModalClose").addEventListener("click", () => {
+    closeTxModal();
+});
+
+
+$("txModalBackdrop").addEventListener("click", () => {
+    closeTxModal();
+});
+
+
+$("txSend").addEventListener("click", () => {
+    sendTransaction();
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 async function initApp(user) {
     currentUser = user;
     updateUserPanel(user);
@@ -1013,7 +1666,7 @@ $("dataDbBack").addEventListener("click", closeDataDbFolder);
 $("dataDbSave").addEventListener("click", saveDataDb);
 
 $("addTxBtn").addEventListener("click", () => {
-    alert("O próximo passo será criar o formulário real de nova transação.");
+    openTxModal();
 });
 
 $("logoutBtn")?.addEventListener("click", async () => {

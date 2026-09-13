@@ -26,7 +26,25 @@
 </head>
 
 <body class="dark">
-    <div class="bg-overlay"></div>
+    <div class="bg-overlay">
+        <div class="bg-console">
+            <div class="bg-console-table" id="bgConsoleDb">
+                <span>@firebase-db - buscando dados...</span>
+                <span>@firebase-db - validando transações...</span>
+            </div>
+            <table class="bg-console-table" id="bgConsoleError">
+                <tr>
+                    <td>@System</td>
+                    <td> - buscando dados...</td>
+                </tr>
+                <tr>
+                    <td>@System</td>
+                    <td> - dados corrompidos[0x0001]</td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
     <div class="app">
 
         <!-- Header -->
@@ -417,6 +435,143 @@
     </div>
 
 
+
+
+    <!-- ADD TRANSACTION MODAL -->
+    <div class="tx-modal" id="txModal">
+
+        <div class="tx-modal-backdrop" id="txModalBackdrop"></div>
+
+        <div class="tx-modal-sheet">
+
+            <div class="tx-modal-header">
+                <button class="tx-modal-close" id="txModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <div>
+                    <span class="tx-modal-kicker">Novo registro</span>
+                    <h3 id="txModalTitle">Escolha uma conta</h3>
+                </div>
+
+                <div class="tx-step" id="txStep">1/4</div>
+            </div>
+
+
+            <!-- STEP 1: CONTA -->
+            <div class="tx-step-content active" id="txStepAccount">
+
+                <p class="tx-modal-description">
+                    Onde esse movimento aconteceu?
+                </p>
+
+                <div class="wallet-stack" id="txAccounts"></div>
+
+            </div>
+
+
+            <!-- STEP 2: TIPO -->
+            <div class="tx-step-content" id="txStepType">
+
+                <p class="tx-modal-description">
+                    Qual tipo de movimento?
+                </p>
+
+                <div class="tx-type-buttons">
+
+                    <button class="tx-type-btn expense" data-tx-type="expense">
+                        <span class="tx-type-icon">
+                            <i class="fas fa-arrow-down"></i>
+                        </span>
+
+                        <span>
+                            <strong>Débito</strong>
+                            <small>Dinheiro saindo</small>
+                        </span>
+                    </button>
+
+
+                    <button class="tx-type-btn income" data-tx-type="income">
+                        <span class="tx-type-icon">
+                            <i class="fas fa-arrow-up"></i>
+                        </span>
+
+                        <span>
+                            <strong>Crédito</strong>
+                            <small>Dinheiro entrando</small>
+                        </span>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- STEP 3: VALOR -->
+            <div class="tx-step-content" id="txStepAmount">
+
+                <p class="tx-modal-description">
+                    Quanto?
+                </p>
+
+                <div class="tx-amount-display" id="txAmountDisplay">
+                    R$ 0,00
+                </div>
+
+                <div class="tx-keypad">
+
+                    <button data-key="1">1</button>
+                    <button data-key="2">2</button>
+                    <button data-key="3">3</button>
+
+                    <button data-key="4">4</button>
+                    <button data-key="5">5</button>
+                    <button data-key="6">6</button>
+
+                    <button data-key="7">7</button>
+                    <button data-key="8">8</button>
+                    <button data-key="9">9</button>
+
+                    <button data-key="00">00</button>
+                    <button data-key="0">0</button>
+                    <button data-key="backspace">
+                        <i class="fas fa-backspace"></i>
+                    </button>
+
+                </div>
+
+                <button class="tx-next-btn" id="txAmountNext">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+
+            </div>
+
+
+            <!-- STEP 4: CATEGORIA -->
+            <div class="tx-step-content" id="txStepCategory">
+
+                <p class="tx-modal-description">
+                    Categoria
+                </p>
+
+                <div class="wallet-stack category-stack" id="txCategories"></div>
+
+                <div class="tx-description-wrap">
+
+                    <input type="text" id="txDescription" class="tx-description-input"
+                        placeholder="Descrição (opcional)" maxlength="120" autocomplete="off" />
+
+                </div>
+
+                <button class="tx-send-btn" id="txSend">
+                    Enviar
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+
+            </div>
+
+        </div>
+    </div>
 
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>

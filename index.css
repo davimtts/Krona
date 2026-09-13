@@ -80,11 +80,40 @@ body {
 .bg-overlay {
     display: none;
 }
+.bg-overlay .bg-console {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    width: 700px;
+    height: 400px;
+    z-index: 1000;
+}
+.bg-console-table {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+    display: flex;
+    flex-direction: column;
+}
+.bg-console-table th,
+.bg-console-table td {
+    border: 1px solid #555;
+    padding: 8px;
+    text-align: left;
+}
 
 @media (min-width:430px) {
     .bg-overlay {
         position: fixed;
         display: flex;
+        align-items: center;
+        justify-content: center;
         top: 0;
         left: 0;
         width: 100vw;
@@ -1350,4 +1379,664 @@ body.light .data-db-input {
     background: transparent;
     color: var(--red);
     cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   NOVA TRANSAÇÃO
+========================================================= */
+
+.tx-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+}
+
+.tx-modal.active {
+    display: block;
+}
+
+.tx-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, .72);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+.tx-modal-sheet {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+
+    width: min(100%, 520px);
+    max-height: 92vh;
+
+    padding: 20px 18px 30px;
+
+    background:
+        radial-gradient(
+            circle at 50% -20%,
+            rgba(200, 85, 255, .13),
+            transparent 45%
+        ),
+        var(--card, #0d0d0f);
+
+    border-radius: 28px 28px 0 0;
+
+    box-shadow:
+        0 -20px 80px rgba(0, 0, 0, .45),
+        0 0 50px rgba(200, 85, 255, .08);
+
+    transform: translate(-50%, 100%);
+    transition: transform .42s cubic-bezier(.22, 1, .36, 1);
+
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.tx-modal.active .tx-modal-sheet {
+    transform: translate(-50%, 0);
+}
+
+
+/* HEADER */
+
+.tx-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.tx-modal-close {
+    width: 40px;
+    height: 40px;
+
+    border: 0;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: rgba(255,255,255,.7);
+    background: rgba(255,255,255,.07);
+
+    cursor: pointer;
+}
+
+.tx-modal-kicker {
+    display: block;
+
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+
+    color: #a0a0a8;
+}
+
+.tx-modal-header h3 {
+    margin: 2px 0 0;
+
+    font-size: 21px;
+    font-weight: 600;
+}
+
+.tx-step {
+    margin-left: auto;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    color: #c855ff;
+
+    padding: 7px 10px;
+
+    border-radius: 20px;
+
+    background: rgba(200,85,255,.10);
+}
+
+
+/* STEPS */
+
+.tx-step-content {
+    display: none;
+    animation: txStepIn .35s ease;
+}
+
+.tx-step-content.active {
+    display: block;
+}
+
+@keyframes txStepIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tx-modal-description {
+    margin: 0 0 18px;
+
+    color: rgba(255,255,255,.55);
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   APPLE WALLET CARDS
+========================================================= */
+
+.wallet-stack {
+    position: relative;
+
+    min-height: 230px;
+
+    padding: 10px 4px 30px;
+}
+
+.wallet-card {
+    position: relative;
+
+    width: 100%;
+    height: 190px;
+
+    padding: 20px;
+
+    border-radius: 24px;
+
+    overflow: hidden;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.18);
+
+    transition:
+        transform .5s cubic-bezier(.22,1,.36,1),
+        margin .5s cubic-bezier(.22,1,.36,1),
+        opacity .35s ease;
+
+    user-select: none;
+}
+
+.wallet-card:not(:first-child) {
+    margin-top: -145px;
+}
+
+.wallet-card:nth-child(1) {
+    z-index: 5;
+}
+
+.wallet-card:nth-child(2) {
+    z-index: 4;
+}
+
+.wallet-card:nth-child(3) {
+    z-index: 3;
+}
+
+.wallet-card:nth-child(4) {
+    z-index: 2;
+}
+
+.wallet-card:nth-child(5) {
+    z-index: 1;
+}
+
+.wallet-card:hover {
+    transform: translateY(-3px);
+}
+
+.wallet-stack.expanded {
+    min-height: auto;
+    padding-bottom: 10px;
+}
+
+.wallet-stack.expanded .wallet-card {
+    margin-top: 10px;
+    transform: none;
+}
+
+.wallet-stack.expanded .wallet-card:first-child {
+    margin-top: 0;
+}
+
+.wallet-card.selected {
+    transform: scale(1.015);
+    box-shadow:
+        0 20px 45px rgba(0,0,0,.45),
+        0 0 30px rgba(255,255,255,.08);
+}
+
+.wallet-card.hidden-card {
+    opacity: .32;
+    transform: scale(.96);
+}
+
+.wallet-card::after {
+    content: "";
+
+    position: absolute;
+    width: 180px;
+    height: 180px;
+
+    right: -55px;
+    top: -70px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.14);
+    filter: blur(2px);
+}
+
+.wallet-card-top {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.wallet-card-logo {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(255,255,255,.15);
+
+    overflow: hidden;
+}
+
+.wallet-card-logo img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
+.wallet-card-logo i {
+    font-size: 22px;
+    color: white;
+}
+
+.wallet-card-type {
+    font-size: 9px;
+
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+
+    color: rgba(255,255,255,.65);
+}
+
+.wallet-card-info {
+    position: absolute;
+
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+
+    z-index: 2;
+}
+
+.wallet-card-name {
+    font-size: 20px;
+    font-weight: 600;
+
+    color: white;
+}
+
+.wallet-card-balance {
+    margin-top: 4px;
+
+    font-size: 13px;
+
+    color: rgba(255,255,255,.72);
+}
+
+
+/* =========================================================
+   TIPO
+========================================================= */
+
+.tx-type-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tx-type-btn {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 17px;
+
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 18px;
+
+    background: rgba(255,255,255,.045);
+
+    color: white;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        background .2s ease;
+}
+
+.tx-type-btn:active {
+    transform: scale(.98);
+}
+
+.tx-type-btn.expense:hover {
+    border-color: rgba(255,45,107,.5);
+    background: rgba(255,45,107,.08);
+}
+
+.tx-type-btn.income:hover {
+    border-color: rgba(57,255,20,.5);
+    background: rgba(57,255,20,.07);
+}
+
+.tx-type-icon {
+    width: 48px;
+    height: 48px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    font-size: 18px;
+}
+
+.tx-type-btn.expense .tx-type-icon {
+    color: #ff2d6b;
+    background: rgba(255,45,107,.12);
+}
+
+.tx-type-btn.income .tx-type-icon {
+    color: #39ff14;
+    background: rgba(57,255,20,.10);
+}
+
+.tx-type-btn strong {
+    display: block;
+    font-size: 15px;
+}
+
+.tx-type-btn small {
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 11px;
+    color: rgba(255,255,255,.45);
+}
+
+
+/* =========================================================
+   VALOR
+========================================================= */
+
+.tx-amount-display {
+    margin: 10px 0 22px;
+
+    text-align: center;
+
+    font-family: "Orbitron", sans-serif;
+
+    font-size: clamp(32px, 9vw, 48px);
+    font-weight: 600;
+
+    color: #c855ff;
+
+    text-shadow:
+        0 0 15px rgba(200,85,255,.35);
+}
+
+.tx-keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 9px;
+}
+
+.tx-keypad button {
+    height: 62px;
+
+    border: 0;
+    border-radius: 17px;
+
+    background: rgba(255,255,255,.055);
+
+    color: white;
+
+    font-family: "Orbitron", sans-serif;
+    font-size: 20px;
+
+    cursor: pointer;
+
+    transition:
+        background .15s ease,
+        transform .1s ease;
+}
+
+.tx-keypad button:hover {
+    background: rgba(200,85,255,.13);
+}
+
+.tx-keypad button:active {
+    transform: scale(.94);
+    background: rgba(200,85,255,.22);
+}
+
+.tx-keypad button:last-child {
+    color: #ff5c8a;
+}
+
+
+/* NEXT */
+
+.tx-next-btn,
+.tx-send-btn {
+    width: 100%;
+    height: 56px;
+
+    margin-top: 16px;
+
+    border: 0;
+    border-radius: 18px;
+
+    background: linear-gradient(
+        135deg,
+        #9b3cff,
+        #c855ff
+    );
+
+    color: white;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    box-shadow:
+        0 10px 30px rgba(200,85,255,.25);
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        opacity .2s ease;
+}
+
+.tx-next-btn:active,
+.tx-send-btn:active {
+    transform: scale(.98);
+}
+
+.tx-next-btn:disabled,
+.tx-send-btn:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   CATEGORIAS
+========================================================= */
+
+.category-stack {
+    min-height: 0;
+    padding-bottom: 0;
+}
+
+.category-card {
+    height: 76px;
+
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    padding: 12px 16px;
+
+    border-radius: 18px;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        opacity .2s ease,
+        margin .35s ease;
+}
+
+.category-card:not(:first-child) {
+    margin-top: -54px;
+}
+
+.category-card.selected {
+    transform: scale(1.025);
+}
+
+.category-stack.expanded .category-card {
+    margin-top: 8px;
+}
+
+.category-stack.expanded .category-card:first-child {
+    margin-top: 0;
+}
+
+.category-card-icon {
+    width: 46px;
+    height: 46px;
+
+    border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0,0,0,.18);
+
+    color: white;
+}
+
+.category-card-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+}
+
+
+/* DESCRIÇÃO */
+
+.tx-description-wrap {
+    margin-top: 16px;
+}
+
+.tx-description-input {
+    width: 100%;
+    height: 52px;
+
+    box-sizing: border-box;
+
+    padding: 0 16px;
+
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 16px;
+
+    outline: none;
+
+    background: rgba(255,255,255,.045);
+
+    color: white;
+
+    font-family: "Outfit", sans-serif;
+    font-size: 14px;
+}
+
+.tx-description-input::placeholder {
+    color: rgba(255,255,255,.35);
+}
+
+.tx-description-input:focus {
+    border-color: rgba(200,85,255,.5);
+}
+
+
+/* MOBILE */
+
+@media (max-width: 480px) {
+
+    .tx-modal-sheet {
+        padding-bottom: calc(25px + env(safe-area-inset-bottom));
+    }
+
+    .wallet-card {
+        height: 175px;
+    }
+
+    .tx-keypad button {
+        height: 58px;
+    }
 }
