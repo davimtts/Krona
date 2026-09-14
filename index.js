@@ -996,10 +996,96 @@ function renderAccounts() {
                 );
 
 
-            const credit =
+            /*
+ * Crédito pendente calculado pelos registros.
+ *
+ * Só entram:
+ * - registros desta conta
+ * - type === "credit"
+ * - paid diferente de true
+ *
+ * Se paid for false ou não existir, conta.
+ */
+            /*
+ * Crédito pendente calculado pelos registros.
+ */
+            const calculatedCredit =
+                accountTx
+
+                    .filter((tx) =>
+                        tx.type === "credit" &&
+                        tx.paid !== true
+                    )
+
+                    .reduce(
+                        (sum, tx) =>
+                            sum +
+                            Math.abs(
+                                Number(
+                                    tx.amount || 0
+                                )
+                            ),
+                        0
+                    );
+
+
+            /*
+             * Crédito atualmente salvo no banco.
+             */
+            const savedCredit =
                 Number(
                     account.credit || 0
                 );
+
+
+            /*
+             * Se o valor calculado for diferente
+             * do valor salvo, sincroniza o Firestore.
+             */
+            if (
+                Math.abs(
+                    savedCredit -
+                    calculatedCredit
+                ) > 0.001
+            ) {
+
+                updateDoc(
+                    doc(
+                        db,
+                        "users",
+                        auth.currentUser.uid,
+                        "accounts",
+                        account.id
+                    ),
+                    {
+                        credit: calculatedCredit
+                    }
+                )
+                    .then(() => {
+
+                        console.log(
+                            `💳 Crédito sincronizado: ${account.name}`,
+                            calculatedCredit
+                        );
+
+                    })
+                    .catch((error) => {
+
+                        console.error(
+                            `❌ Erro ao sincronizar crédito de ${account.name}:`,
+                            error
+                        );
+
+                    });
+            }
+
+
+            /*
+             * Usa o valor calculado imediatamente
+             * na interface.
+             */
+            const credit =
+                calculatedCredit;
 
 
             /*
@@ -1655,7 +1741,7 @@ function renderCharts() {
 
 
 /* =========================================================
-   DATA DB
+   CONFIG / DataDb
 ========================================================= */
 
 function renderDataDbFolders() {
@@ -1722,6 +1808,68 @@ function valueColor(color) {
     }
 
     return "#ffffff";
+}
+
+function getAccountSelectHtml(record) {
+
+    const currentAccount =
+        getAccount(record.account);
+
+    const selectedId =
+        currentAccount
+            ? currentAccount.id
+            : "";
+
+    const options =
+        ACCOUNTS.map((account) => {
+
+            const color =
+                account.color ||
+                "#C855FF";
+
+            const selected =
+                String(account.id) ===
+                String(selectedId);
+
+            return `
+                <option
+                    value="${escapeHtml(account.id)}"
+                    ${selected ? "selected" : ""}
+                >
+                    ${escapeHtml(account.name)}
+                </option>
+            `;
+        })
+            .join("");
+
+    return `
+        <div class="data-db-field">
+
+            <span class="data-db-key">
+                account
+            </span>
+
+            <select
+                class="
+                    data-db-input
+                    data-db-select
+                    data-db-account-select
+                "
+                data-db-type="transactions"
+                data-id="${escapeHtml(record.id)}"
+                data-key="account"
+            >
+
+                <option value="" disabled>
+                    Selecione um banco
+                </option>
+
+                ${options}
+
+            </select>
+
+        </div>
+    `;
 }
 
 function renderDataDbRecords(
@@ -1931,17 +2079,21 @@ function renderDataDbRecords(
                             }
 
 
+                            if (
+                                type === "transactions" &&
+                                key === "account"
+                            ) {
+                                return getAccountSelectHtml(record);
+                            }
+
+
                             /*
                              * CATEGORY DOS REGISTROS
-                             *
-                             * O select é filtrado de acordo
-                             * com o type atual.
                              */
                             if (
                                 type === "transactions" &&
                                 key === "category"
                             ) {
-
                                 return renderTransactionCategoryField(
                                     record
                                 );

@@ -2795,3 +2795,12 @@ input:focus-visible {
     padding: 3px;
     cursor: pointer;
 }
+
+
+.data-db-account-select {
+    font-weight: 600;
+}
+
+.data-db-account-select option {
+    font-weight: 600;
+}
