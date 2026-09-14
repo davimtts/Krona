@@ -220,7 +220,6 @@ function txRow(tx) {
     return `
         <div
             class="tx-row"
-            style="padding:10px 12px"
         >
 
             <div
@@ -1156,7 +1155,7 @@ function renderAccounts() {
                         </div>
 
 
-                        <div class="tx-list">
+                        <div class="tx-list-bank">
 
                             ${accountTx.length
 
@@ -1713,13 +1712,29 @@ function parseEditedValue(raw, original) {
     return raw;
 }
 
+function valueColor(color) {
+    if (!color) return "#ffffff";
+
+    const value = String(color).trim();
+
+    if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+        return value;
+    }
+
+    return "#ffffff";
+}
+
 function renderDataDbRecords(
     type,
     records = getDataDbEditorRecords(type)
 ) {
-    const container = $("dataDbRecords");
+
+    const container =
+        $("dataDbRecords");
+
 
     if (!records.length) {
+
         container.innerHTML = `
             <div class="data-db-empty">
                 Nenhum registro encontrado.
@@ -1729,81 +1744,395 @@ function renderDataDbRecords(
         return;
     }
 
-    container.innerHTML = records
-        .map((record, index) => {
 
-            const fields = Object.entries(record)
-                .filter(([key]) =>
-                    !["createdAt", "updatedAt"].includes(key)
-                )
-                .map(([key, value]) => {
+    container.innerHTML =
+        records
+            .map((record, index) => {
 
-                    const valueType = getValueType(value);
+                const fields =
+                    Object.entries(record)
 
-                    const inputType =
-                        valueType === "number"
-                            ? "number"
-                            : "text";
+                        .filter(([key]) =>
+                            ![
+                                "createdAt",
+                                "updatedAt"
+                            ].includes(key)
+                        )
 
-                    const step =
-                        inputType === "number"
-                            ? 'step="0.01"'
-                            : "";
+                        .map(([key, value]) => {
 
-                    return `
-                        <div class="data-db-field">
+                            /*
+                             * ID nunca deve ser alterado.
+                             */
+                            if (key === "id" && ("color" in record)) {
+                                return `
+                                    <div class="data-db-field data-db-field-id-color">
 
-                            <span class="data-db-key">
-                                ${escapeHtml(key)}
+                                        <div class="data-db-field-half">
+                                            <span class="data-db-key">id</span>
+                                            <input
+                                                class="data-db-input"
+                                                type="text"
+                                                value="${escapeHtml(String(value ?? ""))}"
+                                                disabled
+                                            >
+                                        </div>
+
+                                        <div class="data-db-field-half">
+                                            <span class="data-db-key">color</span>
+                                            <input
+                                                class="data-db-input"
+                                                type="color"
+                                                data-db-type="${escapeHtml(type)}"
+                                                data-id="${escapeHtml(record.id)}"
+                                                data-key="color"
+                                                value="${valueColor(record.color)}"
+                                            >
+                                        </div>
+
+                                    </div>
+                                `;
+                            }
+
+                            if (key === "color" && ("id" in record)) {
+                                return "";
+                            }
+
+                            if (key === "id") {
+                                return `
+                                    <div class="data-db-field">
+                                        <span class="data-db-key">id</span>
+                                        <input
+                                            class="data-db-input"
+                                            type="text"
+                                            value="${escapeHtml(String(value ?? ""))}"
+                                            disabled
+                                        >
+                                    </div>
+                                `;
+                            }
+
+                            if (key === "color") {
+                                return;
+                            }
+
+
+                            /*
+                             * TYPE DAS CATEGORIAS
+                             *
+                             * Somente income / expense.
+                             */
+                            if (
+                                type === "categories" &&
+                                key === "type"
+                            ) {
+
+                                const currentType =
+                                    value === "income" ||
+                                        value === "expense"
+                                        ? value
+                                        : "expense";
+
+
+                                return `
+                                    <div class="data-db-field">
+
+                                        <span class="data-db-key">
+                                            type
+                                        </span>
+
+                                        <select
+                                            class="data-db-input data-db-select"
+                                            data-db-type="categories"
+                                            data-id="${escapeHtml(record.id)}"
+                                            data-key="type"
+                                        >
+
+                                            <option
+                                                value="income"
+                                                ${currentType === "income" ? "selected" : ""}
+                                            >
+                                                income
+                                            </option>
+
+                                            <option
+                                                value="expense"
+                                                ${currentType === "expense" ? "selected" : ""}
+                                            >
+                                                expense
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+                                `;
+                            }
+
+
+                            /*
+                             * TYPE DOS REGISTROS
+                             *
+                             * income / expense / credit.
+                             */
+                            if (
+                                type === "transactions" &&
+                                key === "type"
+                            ) {
+
+                                const currentType =
+                                    [
+                                        "income",
+                                        "expense",
+                                        "credit"
+                                    ].includes(value)
+                                        ? value
+                                        : "expense";
+
+
+                                return `
+                                    <div class="data-db-field">
+
+                                        <span class="data-db-key">
+                                            type
+                                        </span>
+
+                                        <select
+                                            class="data-db-input data-db-select"
+                                            data-db-type="transactions"
+                                            data-id="${escapeHtml(record.id)}"
+                                            data-key="type"
+                                        >
+
+                                            <option
+                                                value="income"
+                                                ${currentType === "income" ? "selected" : ""}
+                                            >
+                                                income
+                                            </option>
+
+                                            <option
+                                                value="expense"
+                                                ${currentType === "expense" ? "selected" : ""}
+                                            >
+                                                expense
+                                            </option>
+
+                                            <option
+                                                value="credit"
+                                                ${currentType === "credit" ? "selected" : ""}
+                                            >
+                                                credit
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+                                `;
+                            }
+
+
+                            /*
+                             * CATEGORY DOS REGISTROS
+                             *
+                             * O select é filtrado de acordo
+                             * com o type atual.
+                             */
+                            if (
+                                type === "transactions" &&
+                                key === "category"
+                            ) {
+
+                                return renderTransactionCategoryField(
+                                    record
+                                );
+                            }
+
+
+                            const valueType =
+                                getValueType(value);
+
+
+                            const inputType =
+                                valueType === "number"
+                                    ? "number"
+                                    : "text";
+
+
+                            const step =
+                                inputType === "number"
+                                    ? 'step="0.01"'
+                                    : "";
+
+
+                            return `
+                                <div class="data-db-field">
+
+                                    <span class="data-db-key">
+                                        ${escapeHtml(key)}
+                                    </span>
+
+                                    <input
+                                        class="data-db-input"
+                                        data-db-type="${escapeHtml(type)}"
+                                        data-id="${escapeHtml(record.id)}"
+                                        data-key="${escapeHtml(key)}"
+                                        type="${inputType}"
+                                        ${step}
+                                        value="${escapeHtml(value)}"
+                                        autocomplete="off"
+                                        spellcheck="false"
+                                    >
+
+                                </div>
+                            `;
+                        })
+                        .join("");
+
+
+                return `
+                    <div
+                        class="data-db-record"
+                        data-record-id="${escapeHtml(record.id)}"
+                    >
+
+                        <div class="data-db-record-head">
+
+                            <span class="data-db-record-number">
+                                REGISTRO ${String(index + 1).padStart(2, "0")}
                             </span>
 
-                            <input
-                                class="data-db-input"
-                                data-db-type="${escapeHtml(type)}"
-                                data-id="${escapeHtml(record.id)}"
-                                data-key="${escapeHtml(key)}"
-                                type="${inputType}"
-                                ${step}
-                                value="${escapeHtml(value)}"
-                            >
+                            <span class="data-db-record-id">
+                                ${escapeHtml(record.id)}
+                            </span>
 
                         </div>
+
+                        <div class="data-db-fields">
+                            ${fields}
+                        </div>
+
+                    </div>
+                `;
+            })
+            .join("");
+
+
+    bindDataDbInputs();
+
+}
+
+function getTransactionCategories(type) {
+
+    /*
+     * Crédito também usa categorias de despesa.
+     */
+    const categoryType =
+        type === "income"
+            ? "income"
+            : "expense";
+
+
+    return CATEGORIES
+        .filter(
+            category =>
+                category.type === categoryType
+        )
+        .sort(
+            (a, b) =>
+                String(a.name)
+                    .localeCompare(
+                        String(b.name)
+                    )
+        );
+}
+
+
+function renderTransactionCategoryField(record) {
+
+    const type =
+        record.type === "income"
+            ? "income"
+            : "expense";
+
+
+    const categories =
+        getTransactionCategories(type);
+
+
+    let selectedCategory =
+        categories.find(
+            category =>
+                String(category.id) ===
+                String(record.category)
+        );
+
+
+    /*
+     * Se a categoria atual não pertence ao tipo
+     * selecionado, pega automaticamente a primeira.
+     */
+    if (!selectedCategory && categories.length) {
+
+        selectedCategory =
+            categories[0];
+
+        record.category =
+            selectedCategory.id;
+    }
+
+
+    const options =
+        categories.length
+
+            ? categories
+                .map(category => {
+
+                    const selected =
+                        selectedCategory &&
+                            String(category.id) ===
+                            String(selectedCategory.id)
+                            ? "selected"
+                            : "";
+
+
+                    return `
+                        <option
+                            value="${escapeHtml(category.id)}"
+                            ${selected}
+                        >
+                            ${escapeHtml(category.name)}
+                        </option>
                     `;
                 })
-                .join("");
+                .join("")
 
-            return `
-                <div class="data-db-record">
-
-                    <div class="data-db-record-head">
-
-                        <span class="data-db-record-number">
-                            REGISTRO ${String(index + 1).padStart(2, "0")}
-                        </span>
-
-                        <span class="data-db-record-id">
-                            ${escapeHtml(record.id)}
-                        </span>
-
-                    </div>
-
-                    <div class="data-db-fields">
-                        ${fields}
-                    </div>
-
-                </div>
+            : `
+                <option value="">
+                    Nenhuma categoria disponível
+                </option>
             `;
-        })
-        .join("");
 
-    container
-        .querySelectorAll(".data-db-input")
-        .forEach(input => {
-            input.addEventListener(
-                "input",
-                handleDataDbInput
-            );
-        });
+
+    return `
+        <div class="data-db-field">
+
+            <span class="data-db-key">
+                category
+            </span>
+
+            <select
+                class="data-db-input data-db-select"
+                data-db-type="transactions"
+                data-id="${escapeHtml(record.id)}"
+                data-key="category"
+            >
+
+                ${options}
+
+            </select>
+
+        </div>
+    `;
 }
 
 function setDataDbDirty(dirty) {
@@ -1821,30 +2150,249 @@ function setDataDbDirty(dirty) {
 
 function handleDataDbInput(event) {
 
-    const input = event.currentTarget;
+    const input =
+        event.currentTarget;
 
-    const type = input.dataset.dbType;
-    const id = input.dataset.id;
-    const key = input.dataset.key;
 
-    if (!dataDbDraft) return;
+    const type =
+        input.dataset.dbType;
 
-    const record = dataDbDraft.find(
-        item => String(item.id) === String(id)
-    );
 
-    if (!record) return;
+    const id =
+        input.dataset.id;
 
-    if (key === "id") return;
 
-    const originalValue = record[key];
+    const key =
+        input.dataset.key;
 
-    record[key] = parseEditedValue(
-        input.value,
-        originalValue
-    );
+
+    if (!dataDbDraft) {
+        return;
+    }
+
+
+    const record =
+        dataDbDraft.find(
+            item =>
+                String(item.id) ===
+                String(id)
+        );
+
+
+    if (!record) {
+        return;
+    }
+
+
+    /*
+     * ID é somente leitura.
+     */
+    if (key === "id") {
+        return;
+    }
+
+
+    const originalValue =
+        record[key];
+
+
+    /*
+     * SELECT
+     */
+    if (
+        input.tagName === "SELECT"
+    ) {
+
+        record[key] =
+            input.value;
+
+
+        /*
+         * Se mudou o TYPE do registro,
+         * reconstrói o campo category.
+         */
+        if (
+            type === "transactions" &&
+            key === "type"
+        ) {
+
+            const categories =
+                getTransactionCategories(
+                    input.value
+                );
+
+
+            /*
+             * Mantém a categoria se ela ainda
+             * for válida para o novo tipo.
+             */
+            const currentCategory =
+                categories.find(
+                    category =>
+                        String(category.id) ===
+                        String(record.category)
+                );
+
+
+            /*
+             * Caso contrário, escolhe a primeira.
+             */
+            if (
+                currentCategory
+            ) {
+
+                record.category =
+                    currentCategory.id;
+
+            } else if (
+                categories.length
+            ) {
+
+                record.category =
+                    categories[0].id;
+
+            } else {
+
+                record.category =
+                    "";
+            }
+
+
+            /*
+             * Atualiza somente o campo category
+             * deste registro.
+             */
+            refreshTransactionCategory(
+                record
+            );
+        }
+
+
+        setDataDbDirty(true);
+
+        return;
+    }
+
+
+    /*
+     * COLOR
+     */
+    if (
+        input.type === "color"
+    ) {
+
+        record[key] =
+            input.value;
+
+
+        const colorLabel =
+            input
+                .closest(".data-db-color-wrap")
+                ?.querySelector(
+                    "[data-color-value]"
+                );
+
+
+        if (colorLabel) {
+
+            colorLabel.textContent =
+                input.value;
+        }
+
+
+        setDataDbDirty(true);
+
+        return;
+    }
+
+
+    /*
+     * INPUT NORMAL
+     */
+    record[key] =
+        parseEditedValue(
+            input.value,
+            originalValue
+        );
+
 
     setDataDbDirty(true);
+}
+function refreshTransactionCategory(record) {
+
+    const recordElement =
+        document.querySelector(
+            `.data-db-record[data-record-id="${CSS.escape(String(record.id))}"]`
+        );
+
+
+    if (!recordElement) {
+        return;
+    }
+
+
+    const categoryField =
+        recordElement
+            .querySelector(
+                '[data-key="category"]'
+            )
+            ?.closest(
+                ".data-db-field"
+            );
+
+
+    if (!categoryField) {
+        return;
+    }
+
+
+    categoryField.outerHTML =
+        renderTransactionCategoryField(
+            record
+        );
+
+
+    const newSelect =
+        recordElement
+            .querySelector(
+                '[data-key="category"]'
+            );
+
+
+    if (newSelect) {
+
+        newSelect.addEventListener(
+            "change",
+            handleDataDbInput
+        );
+
+    }
+}
+
+function bindDataDbInputs() {
+
+    const container =
+        $("dataDbRecords");
+
+
+    container
+        .querySelectorAll(
+            ".data-db-input"
+        )
+        .forEach(input => {
+
+            const eventType =
+                input.tagName === "SELECT"
+                    ? "change"
+                    : "input";
+
+
+            input.addEventListener(
+                eventType,
+                handleDataDbInput
+            );
+
+        });
 }
 
 function openDataDbFolder(type) {
@@ -1866,6 +2414,34 @@ function openDataDbFolder(type) {
      * sem destruir o que o usuário está editando.
      */
     dataDbDraft = cloneDataDbRecords(records);
+
+    if (type === "transactions") {
+
+        dataDbDraft.forEach(record => {
+
+            const categories =
+                getTransactionCategories(
+                    record.type
+                );
+
+
+            const valid =
+                categories.some(
+                    category =>
+                        String(category.id) ===
+                        String(record.category)
+                );
+
+
+            if (!valid && categories.length) {
+
+                record.category =
+                    categories[0].id;
+
+            }
+
+        });
+    }
 
     $("dataDbFolders").style.display = "none";
     $("dataDbEditor").style.display = "";
@@ -3706,3 +4282,9 @@ onAuthStateChanged(
         );
     }
 );
+
+
+
+
+
+

@@ -101,6 +101,7 @@ body {
     border-collapse: collapse;
     table-layout: auto;
 }
+
 .bg-console-list {
     width: 100%;
     height: 100%;
@@ -384,7 +385,23 @@ body {
 }
 
 /* Transaction rows */
+#accountsList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+#dataDbFolders {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
 .tx-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tx-list-bank {
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -399,7 +416,13 @@ body {
     background: var(--bg-card);
     border: 1px solid var(--border);
     transition: border-color 0.15s;
+    padding: 10px 12px;
 }
+.tx-list-bank .tx-row {
+    gap: 8px;
+    padding: 2px 6.5px;
+}
+
 
 .tx-row:hover {
     border-color: var(--border-hover);
@@ -424,6 +447,13 @@ body {
     align-items: center;
 
     flex-shrink: 0;
+}
+.tx-list-bank .tx-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 26px;
+    line-height: 26px;
+    background: none;
 }
 
 
@@ -1364,6 +1394,7 @@ body.light .data-db-input {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: var(--bg-card);
+    margin-bottom: 12px;
 }
 
 .user-panel-info {
@@ -1983,7 +2014,7 @@ body.light .data-db-input {
 }
 
 .category-card {
-    
+
 
     display: flex;
     align-items: center;
@@ -2309,4 +2340,458 @@ body.light .data-db-input {
         height: 58px;
     }
 
+}
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   KRONA - MOBILE / APP RESPONSIVE
+========================================================= */
+
+html {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+
+    touch-action: manipulation;
+}
+
+
+body {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    overflow-x: hidden;
+
+    overscroll-behavior-x: none;
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+
+.app {
+    width: 100%;
+    max-width: 430px;
+    min-width: 0;
+}
+
+
+.main-scroll {
+    width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+
+/* =========================================================
+   INPUTS
+   16px evita o zoom automático do Safari/iPhone.
+========================================================= */
+
+input,
+select,
+textarea,
+button {
+    font-family: var(--font-body);
+}
+
+
+input,
+select,
+textarea {
+    font-size: 16px;
+}
+
+
+.data-db-input {
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   DATA DB - FOLDERS PEQUENOS
+========================================================= */
+
+.data-db-folder-list {
+    gap: 7px;
+}
+
+
+.data-db-folder {
+    min-height: 0;
+    height: 58px;
+
+    padding: 8px 10px;
+
+    gap: 9px;
+
+    border-radius: 10px;
+}
+
+
+.data-db-folder-icon {
+    width: 36px;
+    height: 36px;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+}
+
+
+.data-db-folder-name {
+    font-size: 12px;
+}
+
+
+.data-db-folder-desc {
+    font-size: 9px;
+
+    line-height: 1.1;
+}
+
+
+.data-db-folder-arrow {
+    font-size: 19px;
+}
+
+
+/* =========================================================
+   DATA DB - EDITOR
+========================================================= */
+
+.data-db-editor-header {
+    gap: 7px;
+    margin-bottom: 6px;
+}
+
+
+.data-db-back {
+    width: 32px;
+    height: 32px;
+
+    font-size: 22px;
+}
+
+
+.data-db-editor-title {
+    font-size: 13px;
+}
+
+
+.data-db-save {
+    min-width: 68px;
+    height: 32px;
+
+    padding: 0 8px;
+
+    gap: 5px;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   DATA DB - CARDS
+========================================================= */
+
+.data-db-records {
+    gap: 6px;
+}
+
+
+.data-db-record {
+    border-radius: 9px;
+}
+
+
+.data-db-record-head {
+    min-height: 27px;
+
+    padding: 5px 8px;
+
+    gap: 6px;
+}
+
+
+.data-db-record-number {
+    font-size: 7px;
+}
+
+
+.data-db-record-id {
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   CAMPOS
+========================================================= */
+
+.data-db-fields {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    width: 100%;
+}
+
+
+.data-db-field {
+    min-width: 0;
+    min-height: 48px;
+
+    padding: 5px 7px;
+
+    gap: 3px;
+
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+
+.data-db-field:nth-child(2n) {
+    border-right: none;
+}
+
+
+.data-db-key {
+    font-size: 7px;
+
+    letter-spacing: .03em;
+}
+
+
+/* =========================================================
+   INPUTS DATA DB
+========================================================= */
+
+.data-db-input {
+    width: 100%;
+    min-width: 0;
+
+    height: 32px;
+
+    padding: 0 7px;
+
+    border-radius: 5px;
+
+    font-size: 16px;
+}
+
+
+/*
+ * Select nativo
+ */
+.data-db-select {
+    appearance: auto;
+    -webkit-appearance: auto;
+
+    padding-left: 6px;
+    padding-right: 4px;
+}
+.data-db-select option {
+    padding: 2px 6px;
+    background-color: #2b2a2a;
+    color: #e4e4e4;
+}
+.data-dab-select option:checked {
+    background-color: #c855ff;
+    color: #fff;
+}
+
+
+/* =========================================================
+   COLOR PICKER
+========================================================= */
+
+.data-db-color-wrap {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    width: 100%;
+    min-width: 0;
+}
+
+
+.data-db-color-input {
+    width: 36px;
+    min-width: 36px;
+
+    height: 32px;
+
+    padding: 2px;
+
+    cursor: pointer;
+
+    border-radius: 6px;
+}
+
+
+.data-db-color-input::-webkit-color-swatch-wrapper {
+    padding: 2px;
+}
+
+
+.data-db-color-input::-webkit-color-swatch {
+    border: none;
+    border-radius: 4px;
+}
+
+
+.data-db-color-value {
+    min-width: 0;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    font-family: var(--font-num);
+
+    font-size: 8px;
+
+    color: var(--text-dim);
+}
+
+
+/* =========================================================
+   MOBILE MUITO PEQUENO
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .main-scroll {
+        padding-left: 9px;
+        padding-right: 9px;
+    }
+
+
+    .data-db-folder {
+        height: 54px;
+        padding: 7px 8px;
+    }
+
+
+    .data-db-folder-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
+    }
+
+
+    .data-db-folder-name {
+        font-size: 11px;
+    }
+
+
+    .data-db-folder-desc {
+        font-size: 8px;
+    }
+
+
+    .data-db-field {
+        min-height: 46px;
+        padding: 4px 6px;
+    }
+
+
+    .data-db-input {
+        height: 30px;
+        font-size: 16px;
+    }
+
+}
+
+
+/* =========================================================
+   DESKTOP / TELAS MAIORES
+========================================================= */
+
+@media (min-width: 431px) {
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .app {
+        width: 430px;
+    }
+
+}
+
+
+/* =========================================================
+   TOUCH
+========================================================= */
+
+button,
+select,
+input {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+    outline: none;
+}
+
+
+
+
+
+
+
+/* ID + COR no mesmo campo */
+.data-db-field-id-color {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.data-db-field-half {
+    min-width: 0;
+}
+
+.data-db-field-half label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.data-db-field-half input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Color picker */
+.data-db-field-half input[type="color"] {
+    height: 38px;
+    padding: 3px;
+    cursor: pointer;
 }

@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Krona</title>
 
     <link rel="manifest" href="manifest.json">
@@ -22,15 +23,11 @@
 
     <link
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet"
-    />
+        rel="stylesheet" />
 
     <link rel="stylesheet" href="index.css" />
 
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 </head>
 
 <body class="dark">
@@ -40,11 +37,11 @@
         <div class="bg-console">
 
             <div class="bg-console-list" id="bgConsoleList">
-                
+
             </div>
 
             <table class="bg-console-table" id="bgConsoleTable">
-                
+
             </table>
 
         </div>
@@ -65,10 +62,7 @@
                 Set 2026
             </span>
 
-            <i
-                class="fas fa-bars"
-                style="color: blueviolet; font-size: 24px;"
-            ></i>
+            <i class="fas fa-bars" style="color: blueviolet; font-size: 24px;"></i>
 
         </header>
 
@@ -99,10 +93,7 @@
                         Saldo Total
                     </p>
 
-                    <h2
-                        class="balance-value num purple-glow"
-                        id="totalBalance"
-                    >
+                    <h2 class="balance-value num purple-glow" id="totalBalance">
                         R$ ***
                     </h2>
 
@@ -114,10 +105,7 @@
                                 Entradas
                             </p>
 
-                            <p
-                                class="balance-sub-val num green-glow"
-                                id="totalIncome"
-                            >
+                            <p class="balance-sub-val num green-glow" id="totalIncome">
                                 +R$ ***
                             </p>
 
@@ -131,10 +119,7 @@
                                 Saídas
                             </p>
 
-                            <p
-                                class="balance-sub-val num red-glow"
-                                id="totalExpense"
-                            >
+                            <p class="balance-sub-val num red-glow" id="totalExpense">
                                 -R$ ***
                             </p>
 
@@ -160,10 +145,7 @@
                     Recentes
                 </p>
 
-                <div
-                    class="tx-list"
-                    id="homeTxList"
-                ></div>
+                <div class="tx-list" id="homeTxList"></div>
 
             </section>
 
@@ -189,10 +171,7 @@
 
                 <div id="expenseCategories"></div>
 
-                <p
-                    class="section-label"
-                    style="margin-top:16px"
-                >
+                <p class="section-label" style="margin-top:16px">
                     Fontes de renda
                 </p>
 
@@ -204,41 +183,26 @@
             <!-- CHARTS -->
             <section class="screen" id="screen-charts">
 
-                <div
-                    class="chart-toggle"
-                    id="chartToggle"
-                >
+                <div class="chart-toggle" id="chartToggle">
 
-                    <button
-                        class="chart-tab active"
-                        data-chart="monthly"
-                    >
+                    <button class="chart-tab active" data-chart="monthly">
                         Mensal
                     </button>
 
-                    <button
-                        class="chart-tab"
-                        data-chart="pie"
-                    >
+                    <button class="chart-tab" data-chart="pie">
                         Por Categoria
                     </button>
 
                 </div>
 
 
-                <div
-                    class="card"
-                    id="chartMonthly"
-                >
+                <div class="card" id="chartMonthly">
 
                     <p class="card-label">
                         Entradas vs. Saídas
                     </p>
 
-                    <canvas
-                        id="barChart"
-                        height="200"
-                    ></canvas>
+                    <canvas id="barChart" height="200"></canvas>
 
                     <div class="chart-legend">
 
@@ -274,10 +238,7 @@
                         </p>
                         <canvas id="pieChart" height="220"></canvas>
                     </div>
-                    <div
-                        id="pieList"
-                        class="pie-list"
-                    ></div>
+                    <div id="pieList" class="pie-list"></div>
                 </div>
 
 
@@ -364,25 +325,15 @@
 
                         <div class="user-panel-info">
 
-                            <span
-                                class="user-panel-name"
-                                id="currentUserName"
-                            >
+                            <span class="user-panel-name" id="currentUserName">
                                 Usuário
                             </span>
 
-                            <span
-                                class="user-panel-email"
-                                id="currentUserEmail"
-                            ></span>
+                            <span class="user-panel-email" id="currentUserEmail"></span>
 
                         </div>
 
-                        <button
-                            class="logout-btn"
-                            id="logoutBtn"
-                            type="button"
-                        >
+                        <button class="logout-btn" id="logoutBtn" type="button">
                             <i class="fas fa-sign-out-alt"></i>
                         </button>
 
@@ -396,10 +347,7 @@
 
                     <div class="data-db-folder-list">
 
-                        <button
-                            class="data-db-folder"
-                            data-db-type="accounts"
-                        >
+                        <button class="data-db-folder" data-db-type="accounts">
 
                             <span class="data-db-folder-icon">
                                 <i class="fas fa-university"></i>
@@ -424,10 +372,7 @@
                         </button>
 
 
-                        <button
-                            class="data-db-folder"
-                            data-db-type="categories"
-                        >
+                        <button class="data-db-folder" data-db-type="categories">
 
                             <span class="data-db-folder-icon">
                                 <i class="fas fa-tags"></i>
@@ -452,10 +397,7 @@
                         </button>
 
 
-                        <button
-                            class="data-db-folder"
-                            data-db-type="transactions"
-                        >
+                        <button class="data-db-folder" data-db-type="transactions">
 
                             <span class="data-db-folder-icon">
                                 <i class="fas fa-receipt"></i>
@@ -485,46 +427,29 @@
 
 
                 <!-- DATA DB EDITOR -->
-                <div
-                    id="dataDbEditor"
-                    style="display:none;"
-                >
+                <div id="dataDbEditor" style="display:none;">
 
                     <div class="data-db-editor-header">
 
-                        <button
-                            class="data-db-back"
-                            id="dataDbBack"
-                            aria-label="Voltar"
-                        >
+                        <button class="data-db-back" id="dataDbBack" aria-label="Voltar">
                             ‹
                         </button>
 
 
                         <div class="data-db-editor-title-wrap">
 
-                            <p
-                                class="section-label"
-                                id="dataDbEditorLabel"
-                            >
+                            <p class="section-label" id="dataDbEditorLabel">
                                 Banco de dados
                             </p>
 
-                            <h3
-                                class="data-db-editor-title"
-                                id="dataDbEditorTitle"
-                            >
+                            <h3 class="data-db-editor-title" id="dataDbEditorTitle">
                                 Bancos
                             </h3>
 
                         </div>
 
 
-                        <button
-                            class="data-db-save"
-                            id="dataDbSave"
-                            disabled
-                        >
+                        <button class="data-db-save" id="dataDbSave" disabled>
 
                             <i class="fas fa-save"></i>
 
@@ -537,10 +462,7 @@
                     </div>
 
 
-                    <div
-                        class="data-db-records"
-                        id="dataDbRecords"
-                    ></div>
+                    <div class="data-db-records" id="dataDbRecords"></div>
 
                 </div>
 
@@ -552,21 +474,12 @@
         <!-- BOTTOM NAV -->
         <nav class="bottom-nav">
 
-            <button
-                class="nav-plus"
-                id="addTxBtn"
-            >
-                <img
-                    src="img/plus.png"
-                    alt="Adicionar"
-                />
+            <button class="nav-plus" id="addTxBtn">
+                <img src="img/plus.png" alt="Adicionar" />
             </button>
 
 
-            <button
-                class="nav-btn active"
-                data-tab="home"
-            >
+            <button class="nav-btn active" data-tab="home">
 
                 <i class="nav-icon fas fa-home"></i>
 
@@ -577,10 +490,7 @@
             </button>
 
 
-            <button
-                class="nav-btn"
-                data-tab="accounts"
-            >
+            <button class="nav-btn" data-tab="accounts">
 
                 <i class="nav-icon fas fa-university"></i>
 
@@ -591,10 +501,7 @@
             </button>
 
 
-            <button
-                class="nav-btn"
-                data-tab="categories"
-            >
+            <button class="nav-btn" data-tab="categories">
 
                 <i class="nav-icon fas fa-list"></i>
 
@@ -605,10 +512,7 @@
             </button>
 
 
-            <button
-                class="nav-btn"
-                data-tab="charts"
-            >
+            <button class="nav-btn" data-tab="charts">
 
                 <i class="nav-icon fas fa-chart-bar"></i>
 
@@ -619,10 +523,7 @@
             </button>
 
 
-            <button
-                class="nav-btn"
-                data-tab="data-db"
-            >
+            <button class="nav-btn" data-tab="data-db">
 
                 <i class="nav-icon fas fa-cog"></i>
 
@@ -641,15 +542,9 @@
          ADD TRANSACTION MODAL
          ===================================================== -->
 
-    <div
-        class="tx-modal"
-        id="txModal"
-    >
+    <div class="tx-modal" id="txModal">
 
-        <div
-            class="tx-modal-backdrop"
-            id="txModalBackdrop"
-        ></div>
+        <div class="tx-modal-backdrop" id="txModalBackdrop"></div>
 
 
         <div class="tx-modal-sheet">
@@ -658,10 +553,7 @@
             <!-- HEADER -->
             <div class="tx-modal-header">
 
-                <button
-                    class="tx-modal-close"
-                    id="txModalClose"
-                >
+                <button class="tx-modal-close" id="txModalClose">
                     <i class="fas fa-times"></i>
                 </button>
 
@@ -679,10 +571,7 @@
                 </div>
 
 
-                <div
-                    class="tx-step"
-                    id="txStep"
-                >
+                <div class="tx-step" id="txStep">
                     1/3
                 </div>
 
@@ -693,20 +582,14 @@
                  STEP 1 - CONTA
                  ================================================= -->
 
-            <div
-                class="tx-step-content active"
-                id="txStepAccount"
-            >
+            <div class="tx-step-content active" id="txStepAccount">
 
                 <p class="tx-modal-description">
                     Onde esse movimento aconteceu?
                 </p>
 
 
-                <div
-                    class="wallet-stack"
-                    id="txAccounts"
-                ></div>
+                <div class="wallet-stack" id="txAccounts"></div>
 
 
                 <!--
@@ -714,16 +597,9 @@
                     DEPOIS QUE UMA CONTA É SELECIONADA
                 -->
 
-                <div
-                    class="tx-type-chooser"
-                    id="txTypeChooser"
-                    style="display:none;"
-                >
+                <div class="tx-type-chooser" id="txTypeChooser" style="display:none;">
 
-                    <button
-                        class="tx-type-btn tx-type-debit"
-                        data-tx-type="expense"
-                    >
+                    <button class="tx-type-btn tx-type-debit" data-tx-type="expense">
 
                         <span class="tx-type-icon">
                             <i class="fas fa-arrow-down"></i>
@@ -744,10 +620,7 @@
                     </button>
 
 
-                    <button
-                        class="tx-type-btn tx-type-credit"
-                        data-tx-type="credit"
-                    >
+                    <button class="tx-type-btn tx-type-credit" data-tx-type="credit">
 
                         <span class="tx-type-icon">
                             <i class="fas fa-credit-card"></i>
@@ -776,20 +649,14 @@
                  STEP 2 - VALOR
                  ================================================= -->
 
-            <div
-                class="tx-step-content"
-                id="txStepAmount"
-            >
+            <div class="tx-step-content" id="txStepAmount">
 
                 <p class="tx-modal-description">
                     Quanto?
                 </p>
 
 
-                <div
-                    class="tx-amount-display"
-                    id="txAmountDisplay"
-                >
+                <div class="tx-amount-display" id="txAmountDisplay">
                     R$ 0,00
                 </div>
 
@@ -850,10 +717,7 @@
                 </div>
 
 
-                <button
-                    class="tx-next-btn"
-                    id="txAmountNext"
-                >
+                <button class="tx-next-btn" id="txAmountNext">
 
                     <i class="fas fa-chevron-right"></i>
 
@@ -866,20 +730,14 @@
                  STEP 3 - CATEGORIA
                  ================================================= -->
 
-            <div
-                class="tx-step-content"
-                id="txStepCategory"
-            >
+            <div class="tx-step-content" id="txStepCategory">
 
                 <p class="tx-modal-description">
                     Escolha uma categoria
                 </p>
 
 
-                <div
-                    class="wallet-stack-cat"
-                    id="txCategories"
-                ></div>
+                <div class="wallet-stack-cat" id="txCategories"></div>
 
 
                 <!--
@@ -887,11 +745,7 @@
                     CLICAR NO BOTÃO >
                 -->
 
-                <div
-                    class="tx-description-wrap"
-                    id="txDescriptionWrap"
-                    style="display:none;"
-                >
+                <div class="tx-description-wrap" id="txDescriptionWrap" style="display:none;">
 
                     <label for="txDescription">
 
@@ -904,13 +758,8 @@
                     </label>
 
 
-                    <input
-                        type="text"
-                        id="txDescription"
-                        placeholder="Ex: Compra no mercado"
-                        maxlength="120"
-                        autocomplete="off"
-                    />
+                    <input type="text" id="txDescription" placeholder="Ex: Compra no mercado" maxlength="120"
+                        autocomplete="off" />
 
                 </div>
 
@@ -923,11 +772,7 @@
                     Enviar
                 -->
 
-                <button
-                    class="tx-next-btn"
-                    id="txCategoryNext"
-                    disabled
-                >
+                <button class="tx-next-btn" id="txCategoryNext" disabled>
 
                     <i class="fas fa-chevron-right"></i>
 
@@ -944,17 +789,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 
-    <script
-        type="module"
-        src="firebase.js"
-    ></script>
+    <script type="module" src="firebase.js"></script>
 
-    
 
-    <script
-        type="module"
-        src="index.js"
-    ></script>
+
+    <script type="module" src="index.js"></script>
 
 </body>
 
