@@ -1238,13 +1238,10 @@ body.light .nav-btn.active::after {
     justify-content: center;
     gap: 4px;
     padding: 6px 10px;
-    border-right: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
+    
 }
 
-.data-db-field:last-child {
-    border-right: none;
-}
+
 
 
 /* Nome do campo */
@@ -1310,7 +1307,7 @@ body.light .data-db-input {
 @media (max-width: 600px) {
 
     .data-db-records {
-        gap: 7px;
+        gap: 12px;
     }
 
     .data-db-record-head {
@@ -1327,8 +1324,7 @@ body.light .data-db-input {
         min-width: 0;
         min-height: 44px;
         padding: 6px 8px;
-        border-right: 1px solid var(--border);
-        border-bottom: 1px solid var(--border);
+        
     }
 
     .data-db-field:nth-child(2n) {
@@ -2511,9 +2507,7 @@ textarea {
    DATA DB - CARDS
 ========================================================= */
 
-.data-db-records {
-    gap: 6px;
-}
+
 
 
 .data-db-record {
@@ -2562,8 +2556,7 @@ textarea {
 
     gap: 3px;
 
-    border-right: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
+    
 }
 
 
@@ -2594,6 +2587,10 @@ textarea {
     border-radius: 5px;
 
     font-size: 16px;
+}
+.data-db-input:disabled {
+    cursor: not-allowed;
+    opacity: .55;
 }
 
 

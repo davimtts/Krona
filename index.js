@@ -2921,6 +2921,7 @@ function refreshAll() {
     ) {
         renderDataDbRecords(dataDbOpenType);
     }
+    renderAccounts();
 }
 
 
