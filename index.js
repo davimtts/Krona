@@ -990,10 +990,99 @@ function renderAccounts() {
                 account.id;
 
 
-            const balance =
+            /*
+ * Saldo calculado pelos registros.
+ *
+ * INCOME  = entrada
+ * EXPENSE = saída
+ * CREDIT  = ignorado
+ *
+ * O sinal original do amount não importa.
+ */
+            const calculatedBalance =
+                accountTx.reduce(
+                    (balance, tx) => {
+
+                        const amount =
+                            Math.abs(
+                                Number(
+                                    tx.amount || 0
+                                )
+                            );
+
+                        if (tx.type === "income") {
+                            return balance + amount;
+                        }
+
+                        if (tx.type === "expense") {
+                            return balance - amount;
+                        }
+
+                        // credit não participa do saldo
+                        return balance;
+
+                    },
+                    0
+                );
+
+
+            /*
+             * Saldo atualmente salvo no banco.
+             */
+            const savedBalance =
                 Number(
                     account.balance || 0
                 );
+
+
+            /*
+             * Se o saldo calculado for diferente
+             * do saldo salvo, sincroniza o Firestore.
+             */
+            if (
+                Math.abs(
+                    savedBalance -
+                    calculatedBalance
+                ) > 0.001
+            ) {
+
+                updateDoc(
+                    doc(
+                        db,
+                        "users",
+                        auth.currentUser.uid,
+                        "accounts",
+                        account.id
+                    ),
+                    {
+                        balance: calculatedBalance
+                    }
+                )
+                    .then(() => {
+
+                        console.log(
+                            `💰 Saldo sincronizado: ${account.name}`,
+                            calculatedBalance
+                        );
+
+                    })
+                    .catch((error) => {
+
+                        console.error(
+                            `❌ Erro ao sincronizar saldo de ${account.name}:`,
+                            error
+                        );
+
+                    });
+            }
+
+
+            /*
+             * A interface usa imediatamente
+             * o saldo calculado.
+             */
+            const balance =
+                calculatedBalance;
 
 
             /*

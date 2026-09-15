@@ -892,17 +892,17 @@ body.light .legend-dot {
     background: none;
     border: none;
     transition: transform 0.2s;
+    cursor: pointer;
 
 }
 
-.nav-plus:hover .nav-plus img:hover {
+.nav-plus:hover {
     transform: scale(1.12);
-    width: 100px;
 }
 
 .nav-plus:active {
-    scale: 0.9;
-    transform: rotate(-90deg);
+    transform: scale(0.9);
+    
 }
 
 .nav-plus img {
