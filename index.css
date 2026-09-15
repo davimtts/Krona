@@ -963,10 +963,7 @@ body.light .legend-dot {
 }
 
 /* Adicione um padding na tag main/body para o conteúdo não ficar escondido atrás da barra */
-body {
-    padding-bottom: 70px;
-    /* Ajuste para a altura exata da sua bottom-nav */
-}
+
 
 .nav-btn.active::after {
     content: '';
