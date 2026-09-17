@@ -10,6 +10,7 @@
     --bg: #000000;
     --bg-card: rgba(255, 255, 255, 0.03);
     --border: rgba(255, 255, 255, 0.07);
+    --border-pink: rgba(165, 72, 184, 0.548);
     --border-hover: rgba(255, 255, 255, 0.12);
     --text: #ffffff;
     --text-mid: rgba(255, 255, 255, 0.5);
@@ -413,8 +414,6 @@ body {
     gap: 12px;
     border-radius: var(--radius-sm);
 
-    background: var(--bg-card);
-    border: 1px solid var(--border);
     transition: border-color 0.15s;
     padding: 10px 12px;
 }
@@ -435,8 +434,6 @@ body {
     padding: 2px;
     box-sizing: border-box;
 
-    border-radius: var(--radius-xs);
-    background: var(--border);
 
     display: flex;
     align-items: center;
@@ -455,7 +452,10 @@ body {
     line-height: 26px;
     background: none;
 }
-
+.tx-row-divider {
+    height: 1px;
+    background: var(--border-pink);
+}
 
 
 
@@ -859,14 +859,19 @@ body.light .legend-dot {
 
 /* Bottom nav */
 .bottom-nav {
+    position: fixed;
     display: flex;
-    background: var(--nav-bg);
     border-top: 1px solid var(--nav-border);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     flex-shrink: 0;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
     max-width: 430px;
+    bottom: 0;
+    z-index: 2;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background-color: var(--bg-card);
 }
 
 .nav-btn {
@@ -948,19 +953,7 @@ body.light .legend-dot {
     max-height: 200px;
 }
 
-.bottom-nav {
-    position: fixed;
-    /* Fixa na viewport/tela */
-    bottom: 0;
-    /* Gruda no fundo */
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 2;
-    /* Garante que fique acima dos outros elementos */
-    background-color: var(--bg-card);
-    /* Ajuste com a sua variável ou cor */
-}
+
 
 /* Adicione um padding na tag main/body para o conteúdo não ficar escondido atrás da barra */
 

@@ -129,6 +129,31 @@
 
                 </div>
 
+                <p class="section-label">
+                    Despesas por categoria
+                </p>
+                <div id="expenseCategories"></div>
+
+                <p class="section-label">
+                    Recentes
+                </p>
+                <div class="tx-list" id="homeTxList"></div>
+
+                <p class="section-label" style="margin-top:16px">
+                    Fontes de renda
+                </p>
+                <div id="incomeCategories"></div>
+
+
+                <div id="chartPie" style="display:none;">
+                    <div class="card">
+                        <p class="card-label">
+                            Distribuição de gastos
+                        </p>
+                        <canvas id="pieChart" height="220"></canvas>
+                    </div>
+                    <div id="pieList" class="pie-list"></div>
+                </div>
 
                 <div class="card">
 
@@ -141,11 +166,7 @@
                 </div>
 
 
-                <p class="section-label">
-                    Recentes
-                </p>
-
-                <div class="tx-list" id="homeTxList"></div>
+                
 
             </section>
 
@@ -162,22 +183,7 @@
             </section>
 
 
-            <!-- CATEGORIES -->
-            <section class="screen" id="screen-categories">
-
-                <p class="section-label">
-                    Despesas por categoria
-                </p>
-
-                <div id="expenseCategories"></div>
-
-                <p class="section-label" style="margin-top:16px">
-                    Fontes de renda
-                </p>
-
-                <div id="incomeCategories"></div>
-
-            </section>
+            
 
 
             <!-- CHARTS -->
@@ -231,15 +237,7 @@
                 </div>
 
 
-                <div id="chartPie" style="display:none;">
-                    <div class="card">
-                        <p class="card-label">
-                            Distribuição de gastos
-                        </p>
-                        <canvas id="pieChart" height="220"></canvas>
-                    </div>
-                    <div id="pieList" class="pie-list"></div>
-                </div>
+                
 
 
                 <div class="stats-grid">
@@ -501,15 +499,7 @@
             </button>
 
 
-            <button class="nav-btn" data-tab="categories">
-
-                <i class="nav-icon fas fa-list"></i>
-
-                <span class="nav-label">
-                    Categ.
-                </span>
-
-            </button>
+            
 
 
             <button class="nav-btn" data-tab="charts">

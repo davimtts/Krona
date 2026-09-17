@@ -93,7 +93,7 @@ let theme = window.matchMedia("(prefers-color-scheme: light)").matches
     : "dark";
 
 let activeTab = "home";
-let activeChartType = "monthly";
+let activeChartType = "pie";
 
 const systemTheme =
     window.matchMedia("(prefers-color-scheme: light)");
@@ -218,10 +218,7 @@ function txRow(tx) {
             : "red-glow";
 
     return `
-        <div
-            class="tx-row"
-        >
-
+        <div class="tx-row">
             <div
                 class="tx-icon"
                 style="color:${escapeHtml(color)}"
@@ -234,7 +231,7 @@ function txRow(tx) {
 
                 <div class="tx-desc">
                     ${escapeHtml(
-        tx.desc || "Sem descrição"
+        tx.desc || category?.name || "Outros"
     )}
                 </div>
 
@@ -270,6 +267,7 @@ function txRow(tx) {
             </div>
 
         </div>
+        <div class="tx-row-divider"></div>
     `;
 }
 
@@ -829,12 +827,13 @@ function renderHome() {
      * Crédito não reduz o saldo.
      */
     const balance =
-        ACCOUNTS.reduce(
-            (sum, account) =>
-                sum +
-                Number(account.balance || 0),
-            0
-        );
+        ACCOUNTS
+            .filter((account) => Number(account.balance || 0) > 0)
+            .reduce(
+                (sum, account) =>
+                    sum + Number(account.balance || 0),
+                0
+            );
 
 
     const income =
@@ -857,17 +856,10 @@ function renderHome() {
 
     const expense =
         TRANSACTIONS
-
-            .filter((tx) =>
-                isExpenseTransaction(tx)
-            )
-
+            .filter((tx) => tx.type === "expense")
             .reduce(
                 (sum, tx) =>
-                    sum +
-                    Math.abs(
-                        Number(tx.amount || 0)
-                    ),
+                    sum + Math.abs(Number(tx.amount || 0)),
                 0
             );
 
@@ -2878,39 +2870,32 @@ function setTab(tab) {
 
     if (tab === "home") {
         renderHome();
+        renderCharts();
     }
 
     if (tab === "accounts") {
         renderAccounts();
     }
 
-    if (tab === "categories") {
-        renderCategories();
-    }
 
-    if (tab === "charts") {
-        renderCharts();
-    }
 }
 
 
 function refreshAll() {
-
+    renderCategories();
+    
     if (activeTab === "home") {
         renderHome();
+        renderCharts();
+        
+
     }
 
     if (activeTab === "accounts") {
         renderAccounts();
     }
 
-    if (activeTab === "categories") {
-        renderCategories();
-    }
 
-    if (activeTab === "charts") {
-        renderCharts();
-    }
 
 
     if (
@@ -4421,22 +4406,7 @@ document
    ABAS DE GRÁFICO
 ========================================================= */
 
-document
-    .querySelectorAll(".chart-tab")
-    .forEach((button) => {
 
-        button.addEventListener(
-            "click",
-            () => {
-
-                activeChartType =
-                    button.dataset.chart;
-
-                renderCharts();
-            }
-        );
-
-    });
 
 
 /* =========================================================
