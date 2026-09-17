@@ -2883,11 +2883,11 @@ function setTab(tab) {
 
 function refreshAll() {
     renderCategories();
-    
+
     if (activeTab === "home") {
         renderHome();
         renderCharts();
-        
+
 
     }
 
