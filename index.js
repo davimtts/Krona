@@ -2907,6 +2907,7 @@ function refreshAll() {
         renderDataDbRecords(dataDbOpenType);
     }
     renderAccounts();
+    renderHome();
 }
 
 
@@ -4380,6 +4381,13 @@ async function initApp(user) {
                 (char) =>
                     char.toUpperCase()
             );
+    const pageLoading =
+        $("loadingPage");
+
+    if (pageLoading) {
+        pageLoading.style.display =
+            "none";
+    }
 }
 
 

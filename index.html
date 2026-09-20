@@ -31,6 +31,14 @@
 </head>
 
 <body class="dark">
+    <div class="loading-page" id="loadingPage">
+
+        <div class="loading-text">
+            Loading...
+        </div>
+
+        <div class="loading-spinner"></div>
+    </div>
 
     <div class="bg-overlay">
 
@@ -70,9 +78,7 @@
         <!-- PAGE TITLE -->
         <div class="page-title-wrap">
 
-            <h2 class="page-title" id="pageTitle">
-                Visão Geral
-            </h2>
+
 
         </div>
 
@@ -145,15 +151,7 @@
                 <div id="incomeCategories"></div>
 
 
-                <div id="chartPie" style="display:none;">
-                    <div class="card">
-                        <p class="card-label">
-                            Distribuição de gastos
-                        </p>
-                        <canvas id="pieChart" height="220"></canvas>
-                    </div>
-                    <div id="pieList" class="pie-list"></div>
-                </div>
+
 
                 <div class="card">
 
@@ -165,8 +163,17 @@
 
                 </div>
 
+                <div id="chartPie" style="display:none;">
+                    <div class="card">
+                        <p class="card-label">
+                            Distribuição de gastos
+                        </p>
+                        <canvas id="pieChart" height="220"></canvas>
+                    </div>
+                    <div id="pieList" class="pie-list"></div>
+                </div>
 
-                
+
 
             </section>
 
@@ -183,7 +190,7 @@
             </section>
 
 
-            
+
 
 
             <!-- CHARTS -->
@@ -237,7 +244,7 @@
                 </div>
 
 
-                
+
 
 
                 <div class="stats-grid">
@@ -475,6 +482,9 @@
             <button class="nav-plus" id="addTxBtn">
                 <img src="img/plus.png" alt="Adicionar" />
             </button>
+            <button class="nav-plusR" id="addRcBtn">
+                <img src="img/plusR.png" alt="Adicionar" />
+            </button>
 
 
             <button class="nav-btn active" data-tab="home">
@@ -499,7 +509,7 @@
             </button>
 
 
-            
+
 
 
             <button class="nav-btn" data-tab="charts">
