@@ -13,6 +13,7 @@ import {
     onSnapshot,
     doc,
     updateDoc,
+    deleteDoc,
     serverTimestamp,
     runTransaction
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
@@ -134,6 +135,8 @@ let txDescriptionReady = false;
 
 const $ = (id) => document.getElementById(id);
 
+let dataDbDeleted = {};
+
 
 function fmt(value) {
     return Number(value || 0).toLocaleString("pt-BR", {
@@ -144,15 +147,41 @@ function fmt(value) {
 
 
 function fmtDate(date) {
-    if (!date) return "--";
 
-    const parts = String(date).split("-");
+    if (!date) {
+        return "--";
+    }
 
-    if (parts.length !== 3) {
+
+    const parts =
+        String(date).split(" ");
+
+
+    if (parts.length !== 2) {
         return date;
     }
 
-    return `${parts[2]}/${parts[1]}`;
+
+    const datePart =
+        parts[0];
+
+    const timePart =
+        parts[1];
+
+
+    const dateParts =
+        datePart.split("-");
+
+
+    if (
+        dateParts.length !== 3 ||
+        !timePart
+    ) {
+        return date;
+    }
+
+
+    return `${dateParts[2]}/${dateParts[1]} ${timePart}`;
 }
 
 
@@ -1959,9 +1988,163 @@ function getAccountSelectHtml(record) {
     `;
 }
 
+
+
+function resetDataDbDeleted() {
+
+    dataDbDeleted = {};
+
+}
+
+
+
+function bindDataDbDeleteButtons() {
+
+    const buttons =
+        document.querySelectorAll(
+            ".data-db-delete-btn"
+        );
+
+
+    buttons.forEach(button => {
+
+        button.addEventListener(
+            "click",
+            handleDataDbDelete
+        );
+
+    });
+
+}
+
+
+
+function handleDataDbDelete(event) {
+
+    const button =
+        event.currentTarget;
+
+
+    const type =
+        button.dataset.dbDeleteType;
+
+
+    const id =
+        button.dataset.dbDeleteId;
+
+
+    if (!dataDbDraft) {
+        return;
+    }
+
+
+    const index =
+        dataDbDraft.findIndex(
+            record =>
+                String(record.id) ===
+                String(id)
+        );
+
+
+    if (index === -1) {
+        return;
+    }
+
+
+    /*
+     * Guarda os IDs que deverão ser
+     * excluídos do Firestore ao salvar.
+     */
+
+    if (!dataDbDeleted) {
+        dataDbDeleted = {};
+    }
+
+
+    if (!dataDbDeleted[type]) {
+        dataDbDeleted[type] = new Set();
+    }
+
+
+    dataDbDeleted[type].add(
+        String(id)
+    );
+
+
+    /*
+     * Remove o registro do draft.
+     *
+     * Assim ele também deixa de participar
+     * das alterações que serão salvas.
+     */
+
+    dataDbDraft.splice(
+        index,
+        1
+    );
+
+
+    /*
+     * Remove da tela.
+     */
+
+    const recordElement =
+        button.closest(
+            ".data-db-record"
+        );
+
+
+    if (recordElement) {
+
+        recordElement.remove();
+
+    }
+
+
+    /*
+     * Se não sobrou nenhum registro,
+     * mostra a mensagem padrão.
+     */
+
+    const container =
+        $("dataDbRecords");
+
+
+    if (
+        !container.querySelector(
+            ".data-db-record"
+        )
+    ) {
+
+        container.innerHTML = `
+
+            <div class="data-db-empty">
+
+                Nenhum registro encontrado.
+
+            </div>
+
+        `;
+
+    }
+
+
+    /*
+     * Existem alterações pendentes.
+     */
+
+    setDataDbDirty(true);
+
+}
+
+
+
 function renderDataDbRecords(
+
     type,
+
     records = getDataDbEditorRecords(type)
+
 ) {
 
     const container =
@@ -1971,27 +2154,40 @@ function renderDataDbRecords(
     if (!records.length) {
 
         container.innerHTML = `
+
             <div class="data-db-empty">
+
                 Nenhum registro encontrado.
+
             </div>
+
         `;
 
         return;
+
     }
 
 
     container.innerHTML =
+
         records
+
             .map((record, index) => {
 
                 const fields =
+
                     Object.entries(record)
 
                         .filter(([key]) =>
+
                             ![
+
                                 "createdAt",
+
                                 "updatedAt"
+
                             ].includes(key)
+
                         )
 
                         .map(([key, value]) => {
@@ -1999,56 +2195,105 @@ function renderDataDbRecords(
                             /*
                              * ID nunca deve ser alterado.
                              */
-                            if (key === "id" && ("color" in record)) {
+
+                            if (
+                                key === "id" &&
+                                ("color" in record)
+                            ) {
+
                                 return `
+
                                     <div class="data-db-field data-db-field-id-color">
 
                                         <div class="data-db-field-half">
+
                                             <span class="data-db-key">id</span>
+
                                             <input
+
                                                 class="data-db-input"
+
                                                 type="text"
+
                                                 value="${escapeHtml(String(value ?? ""))}"
+
                                                 disabled
+
                                             >
+
                                         </div>
+
 
                                         <div class="data-db-field-half">
+
                                             <span class="data-db-key">color</span>
+
                                             <input
+
                                                 class="data-db-input"
+
                                                 type="color"
+
                                                 data-db-type="${escapeHtml(type)}"
+
                                                 data-id="${escapeHtml(record.id)}"
+
                                                 data-key="color"
+
                                                 value="${valueColor(record.color)}"
+
                                             >
+
                                         </div>
 
                                     </div>
+
                                 `;
+
                             }
 
-                            if (key === "color" && ("id" in record)) {
+
+                            if (
+                                key === "color" &&
+                                ("id" in record)
+                            ) {
+
                                 return "";
+
                             }
+
 
                             if (key === "id") {
+
                                 return `
+
                                     <div class="data-db-field">
+
                                         <span class="data-db-key">id</span>
+
                                         <input
+
                                             class="data-db-input"
+
                                             type="text"
+
                                             value="${escapeHtml(String(value ?? ""))}"
+
                                             disabled
+
                                         >
+
                                     </div>
+
                                 `;
+
                             }
 
+
                             if (key === "color") {
+
                                 return;
+
                             }
 
 
@@ -2057,50 +2302,80 @@ function renderDataDbRecords(
                              *
                              * Somente income / expense.
                              */
+
                             if (
+
                                 type === "categories" &&
+
                                 key === "type"
+
                             ) {
 
                                 const currentType =
+
                                     value === "income" ||
+
                                         value === "expense"
+
                                         ? value
+
                                         : "expense";
 
 
                                 return `
+
                                     <div class="data-db-field">
 
                                         <span class="data-db-key">
+
                                             type
+
                                         </span>
 
+
                                         <select
+
                                             class="data-db-input data-db-select"
+
                                             data-db-type="categories"
+
                                             data-id="${escapeHtml(record.id)}"
+
                                             data-key="type"
+
                                         >
 
                                             <option
+
                                                 value="income"
+
                                                 ${currentType === "income" ? "selected" : ""}
+
                                             >
+
                                                 income
+
                                             </option>
 
+
                                             <option
+
                                                 value="expense"
+
                                                 ${currentType === "expense" ? "selected" : ""}
+
                                             >
+
                                                 expense
+
                                             </option>
 
                                         </select>
 
                                     </div>
+
                                 `;
+
                             }
 
 
@@ -2109,154 +2384,272 @@ function renderDataDbRecords(
                              *
                              * income / expense / credit.
                              */
+
                             if (
+
                                 type === "transactions" &&
+
                                 key === "type"
+
                             ) {
 
                                 const currentType =
+
                                     [
+
                                         "income",
+
                                         "expense",
+
                                         "credit"
+
                                     ].includes(value)
+
                                         ? value
+
                                         : "expense";
 
 
                                 return `
+
                                     <div class="data-db-field">
 
                                         <span class="data-db-key">
+
                                             type
+
                                         </span>
 
+
                                         <select
+
                                             class="data-db-input data-db-select"
+
                                             data-db-type="transactions"
+
                                             data-id="${escapeHtml(record.id)}"
+
                                             data-key="type"
+
                                         >
 
                                             <option
+
                                                 value="income"
+
                                                 ${currentType === "income" ? "selected" : ""}
+
                                             >
+
                                                 income
+
                                             </option>
 
+
                                             <option
+
                                                 value="expense"
+
                                                 ${currentType === "expense" ? "selected" : ""}
+
                                             >
+
                                                 expense
+
                                             </option>
 
+
                                             <option
+
                                                 value="credit"
+
                                                 ${currentType === "credit" ? "selected" : ""}
+
                                             >
+
                                                 credit
+
                                             </option>
 
                                         </select>
 
                                     </div>
+
                                 `;
+
                             }
 
 
                             if (
+
                                 type === "transactions" &&
+
                                 key === "account"
+
                             ) {
+
                                 return getAccountSelectHtml(record);
+
                             }
 
 
                             /*
                              * CATEGORY DOS REGISTROS
                              */
+
                             if (
+
                                 type === "transactions" &&
+
                                 key === "category"
+
                             ) {
+
                                 return renderTransactionCategoryField(
+
                                     record
+
                                 );
+
                             }
 
 
                             const valueType =
+
                                 getValueType(value);
 
 
                             const inputType =
+
                                 valueType === "number"
+
                                     ? "number"
+
                                     : "text";
 
 
                             const step =
+
                                 inputType === "number"
+
                                     ? 'step="0.01"'
+
                                     : "";
 
 
                             return `
+
                                 <div class="data-db-field">
 
                                     <span class="data-db-key">
+
                                         ${escapeHtml(key)}
+
                                     </span>
 
+
                                     <input
+
                                         class="data-db-input"
+
                                         data-db-type="${escapeHtml(type)}"
+
                                         data-id="${escapeHtml(record.id)}"
+
                                         data-key="${escapeHtml(key)}"
+
                                         type="${inputType}"
+
                                         ${step}
+
                                         value="${escapeHtml(value)}"
+
                                         autocomplete="off"
+
                                         spellcheck="false"
+
                                     >
 
                                 </div>
+
                             `;
+
                         })
+
                         .join("");
 
 
                 return `
+
                     <div
+
                         class="data-db-record"
+
                         data-record-id="${escapeHtml(record.id)}"
+
                     >
 
                         <div class="data-db-record-head">
 
-                            <span class="data-db-record-number">
-                                REGISTRO ${String(index + 1).padStart(2, "0")}
-                            </span>
+                            <div class="data-db-record-head-info">
 
-                            <span class="data-db-record-id">
-                                ${escapeHtml(record.id)}
-                            </span>
+                                <span class="data-db-record-number">
+
+                                    REGISTRO ${String(index + 1).padStart(2, "0")}
+
+                                </span>
+
+
+                                <span class="data-db-record-id">
+
+                                    ${escapeHtml(record.id)}
+
+                                </span>
+
+                            </div>
+
+
+                            <button
+
+                                type="button"
+
+                                class="data-db-delete-btn"
+
+                                data-db-delete-type="${escapeHtml(type)}"
+
+                                data-db-delete-id="${escapeHtml(record.id)}"
+
+                                title="Excluir"
+
+                                aria-label="Excluir registro"
+
+                            >
+
+                                <i class="fas fa-trash"></i>
+
+                            </button>
 
                         </div>
 
+
                         <div class="data-db-fields">
+
                             ${fields}
+
                         </div>
 
                     </div>
+
                 `;
+
             })
+
             .join("");
 
 
     bindDataDbInputs();
+
+    bindDataDbDeleteButtons();
 
 }
 
@@ -2732,10 +3125,15 @@ async function saveDataDb() {
         return;
     }
 
+
     const config =
         DATA_DB_CONFIG[dataDbOpenType];
 
-    if (!config) return;
+
+    if (!config) {
+        return;
+    }
+
 
     /*
      * Congela o rascunho que será salvo.
@@ -2744,63 +3142,162 @@ async function saveDataDb() {
      * o Firebase processa os writes, o conjunto
      * enviado permanece consistente.
      */
+
     const draftToSave =
         cloneDataDbRecords(dataDbDraft);
+
+
+    /*
+     * Congela também os IDs que deverão
+     * ser excluídos do Firebase.
+     */
+
+    const deletedIds =
+        dataDbDeleted &&
+        dataDbDeleted[dataDbOpenType]
+            ? Array.from(
+                dataDbDeleted[dataDbOpenType]
+            )
+            : [];
+
 
     try {
 
         dataDbSaving = true;
 
-        const saveButton = $("dataDbSave");
+
+        const saveButton =
+            $("dataDbSave");
+
 
         saveButton.disabled = true;
+
 
         saveButton.innerHTML = `
             <i class="fas fa-spinner fa-spin"></i>
             <span>Salvando</span>
         `;
 
-        const writes = draftToSave.map(record => {
-
-            const recordRef = doc(
-                db,
-                "users",
-                currentUser.uid,
-                config.collection,
-                record.id
-            );
-
-            const cleanRecord = {
-                ...record
-            };
-
-            delete cleanRecord.id;
-
-            return updateDoc(
-                recordRef,
-                {
-                    ...cleanRecord,
-                    updatedAt: serverTimestamp()
-                }
-            );
-        });
-
-        await Promise.all(writes);
 
         /*
-         * Mantém o que acabou de ser salvo na tela
-         * enquanto aguardamos o próximo snapshot.
+         * ─────────────────────────────
+         * EXCLUSÕES
+         * ─────────────────────────────
+         *
+         * Remove do Firestore os documentos
+         * que foram apagados pela lixeira.
          */
-        dataDbDraft = draftToSave;
 
-        dataDbDirty = false;
+        const deletes =
+            deletedIds.map(id => {
 
-        setDataDbDirty(false);
+                const recordRef =
+                    doc(
+                        db,
+                        "users",
+                        currentUser.uid,
+                        config.collection,
+                        id
+                    );
+
+
+                return deleteDoc(
+                    recordRef
+                );
+
+            });
+
+
+        /*
+         * ─────────────────────────────
+         * ATUALIZAÇÕES
+         * ─────────────────────────────
+         *
+         * Salva os registros que continuam
+         * existindo no draft.
+         */
+
+        const writes =
+            draftToSave.map(record => {
+
+                const recordRef =
+                    doc(
+                        db,
+                        "users",
+                        currentUser.uid,
+                        config.collection,
+                        record.id
+                    );
+
+
+                const cleanRecord = {
+                    ...record
+                };
+
+
+                delete cleanRecord.id;
+
+
+                return updateDoc(
+                    recordRef,
+                    {
+                        ...cleanRecord,
+                        updatedAt:
+                            serverTimestamp()
+                    }
+                );
+
+            });
+
+
+        /*
+         * Executa exclusões e atualizações.
+         */
+
+        await Promise.all([
+            ...deletes,
+            ...writes
+        ]);
+
+
+        /*
+         * Tudo foi salvo/excluído com sucesso.
+         *
+         * Agora podemos limpar a lista de exclusões.
+         */
+
+        if (dataDbDeleted) {
+
+            dataDbDeleted[dataDbOpenType] =
+                new Set();
+
+        }
+
+
+        /*
+         * Mantém o que acabou de ser salvo
+         * na tela enquanto aguardamos o próximo
+         * snapshot.
+         */
+
+        dataDbDraft =
+            draftToSave;
+
+
+        dataDbDirty =
+            false;
+
+
+        setDataDbDirty(
+            false
+        );
+
 
         renderDataDbRecords(
             dataDbOpenType,
             dataDbDraft
         );
+
 
     } catch (error) {
 
@@ -2809,30 +3306,51 @@ async function saveDataDb() {
             error
         );
 
-        dataDbDirty = true;
 
-        setDataDbDirty(true);
+        /*
+         * NÃO limpamos dataDbDeleted aqui.
+         *
+         * Se o Firebase falhar, os IDs continuam
+         * marcados para exclusão e poderão ser
+         * enviados novamente no próximo salvar.
+         */
+
+        dataDbDirty =
+            true;
+
+
+        setDataDbDirty(
+            true
+        );
+
 
         alert(
             "Não foi possível salvar as alterações."
         );
 
+
     } finally {
 
-        dataDbSaving = false;
+        dataDbSaving =
+            false;
 
-        const saveButton = $("dataDbSave");
+
+        const saveButton =
+            $("dataDbSave");
+
 
         saveButton.innerHTML = `
             <i class="fas fa-save"></i>
             <span>Salvar</span>
         `;
 
+
         saveButton.disabled =
             !dataDbDirty;
-    }
-}
 
+    }
+
+}
 
 /* =========================================================
    NAVEGAÇÃO
@@ -5253,16 +5771,34 @@ async function sendReceipt() {
         new Date();
 
 
+    /* data com horas e minutos */
     const date =
-        today.getFullYear() +
-        "-" +
-        String(
-            today.getMonth() + 1
-        ).padStart(2, "0") +
-        "-" +
-        String(
-            today.getDate()
-        ).padStart(2, "0");
+
+    today.getFullYear() +
+
+    "-" +
+
+    String(
+        today.getMonth() + 1
+    ).padStart(2, "0") +
+
+    "-" +
+
+    String(
+        today.getDate()
+    ).padStart(2, "0") +
+
+    " " +
+
+    String(
+        today.getHours()
+    ).padStart(2, "0") +
+
+    ":" +
+
+    String(
+        today.getMinutes()
+    ).padStart(2, "0");
 
 
     try {
