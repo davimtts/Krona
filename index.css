@@ -664,6 +664,7 @@ body {
     display: flex;
     gap: 12px;
     align-items: center;
+    justify-content: center;
     border-radius: var(--radius-sm);
     padding: 12px;
     margin-bottom: 10px;
@@ -699,6 +700,42 @@ body.light .account-stats {
     background: var(--border);
     flex-shrink: 0;
 }
+
+
+
+
+
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s,
+        transform 0.15s;
+}
+.btn:hover {
+    border-color: var(--border-hover);
+}
+
+
+
+
+
+
+
+
 
 /* Category bars */
 .cat-list {

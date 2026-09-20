@@ -45,7 +45,7 @@
         <div class="bg-console">
 
             <div class="bg-console-list" id="bgConsoleList">
-
+                
             </div>
 
             <table class="bg-console-table" id="bgConsoleTable">
@@ -58,6 +58,7 @@
 
 
     <div class="app">
+        
 
         <!-- HEADER -->
         <header class="app-header">
@@ -549,7 +550,6 @@
 
         <div class="tx-modal-sheet">
 
-
             <!-- HEADER -->
             <div class="tx-modal-header">
 
@@ -779,6 +779,181 @@
                 </button>
 
             </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="tx-modal" id="rcModal">
+        <div class="tx-modal-backdrop" id="txModalBackdrop"></div>
+        <div class="tx-modal-sheet">
+            <!-- HEADER -->
+            <div class="tx-modal-header">
+                <button class="tx-modal-close" id="txModalCloseR">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div>
+                    <span class="tx-modal-kicker">
+                        Novo registro
+                    </span>
+                    <h3 id="txModalTitleR">
+                        Escolha uma categoria
+                    </h3>
+                </div>
+                <div class="tx-step" id="txStepR">
+                    1/3
+                </div>
+            </div>
+
+            <!-- =================================================
+                 STEP 1 - CATEGORIA
+            ================================================= -->
+
+            <div class="tx-step-content" id="txStepCategoryR">
+                <p class="tx-modal-description">
+                    Escolha uma categoria
+                </p>
+                <div class="wallet-stack-cat" id="txCategoriesR"></div>
+                <!--
+                    FICA ESCONDIDO ATÉ O USUÁRIO
+                    CLICAR NO BOTÃO >
+                -->
+                <div class="tx-description-wrap" id="txDescriptionWrapR">
+                    <label for="txDescriptionR">
+                        Descrição
+                        <span>
+                            (opcional)
+                        </span>
+
+                    </label>
+
+
+                    <input type="text" id="txDescriptionR" placeholder="Ex: Salário" maxlength="120"
+                        autocomplete="off" />
+
+                </div>
+
+
+                <!--
+                    PRIMEIRO:
+                    >
+
+                    DEPOIS:
+                    Enviar
+                -->
+
+                <button class="tx-next-btn" id="txCategoryNextR" disabled>
+
+                    <i class="fas fa-chevron-right"></i>
+
+                </button>
+
+            </div>
+
+
+
+
+
+            <!-- =================================================
+                 STEP 2 - VALOR
+                 ================================================= -->
+
+            <div class="tx-step-content" id="txStepAmountR">
+
+                <p class="tx-modal-description">
+                    Quanto?
+                </p>
+
+
+                <div class="tx-amount-display" id="txAmountDisplayR">
+                    R$ 0,00
+                </div>
+
+
+                <div class="tx-keypad">
+
+                    <button data-key="1">
+                        1
+                    </button>
+
+                    <button data-key="2">
+                        2
+                    </button>
+
+                    <button data-key="3">
+                        3
+                    </button>
+
+
+                    <button data-key="4">
+                        4
+                    </button>
+
+                    <button data-key="5">
+                        5
+                    </button>
+
+                    <button data-key="6">
+                        6
+                    </button>
+
+
+                    <button data-key="7">
+                        7
+                    </button>
+
+                    <button data-key="8">
+                        8
+                    </button>
+
+                    <button data-key="9">
+                        9
+                    </button>
+
+
+                    <button data-key="00">
+                        00
+                    </button>
+
+                    <button data-key="0">
+                        0
+                    </button>
+
+                    <button data-key="backspace">
+                        <i class="fas fa-backspace"></i>
+                    </button>
+
+                </div>
+
+
+                <button class="tx-next-btn" id="txAmountNextR">
+
+                    <i class="fas fa-chevron-right"></i>
+
+                </button>
+
+            </div>
+
+
+
+            <!-- STEP 3 - CONTA -->
+            <div class="tx-step-content" id="txStepAccountR">
+
+                <p class="tx-modal-description">
+                    Em qual conta entrou?
+                </p>
+
+                <div class="wallet-stack" id="txAccountsR"></div>
+
+                <button class="tx-next-btn" id="txAccountNextR" disabled>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+
+            </div>
+
+
+
 
         </div>
 

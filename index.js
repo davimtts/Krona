@@ -1321,6 +1321,12 @@ function renderAccounts() {
 
                         </div>
 
+                        <div class="account-stats">
+                            <button class="btn btn-small btn-add-tx">
+                                Adicionar  Empréstimo
+                            </button>
+                        </div>
+
 
                         <div class="tx-list-bank">
 
@@ -3647,7 +3653,7 @@ function addTxNumber(value) {
 }
 
 
-document
+$("txModal")
     .querySelectorAll(
         ".tx-keypad button"
     )
@@ -4260,6 +4266,1311 @@ async function sendTransaction() {
         `;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   NOVA RECEITA
+   3 PASSOS
+
+   1 - Categoria
+   2 - Valor
+   3 - Conta
+========================================================= */
+
+let rcSelectedCategory = null;
+let rcSelectedAccount = null;
+let rcAmountCents = 0;
+let rcStep = 1;
+
+
+/* =========================================================
+   ELEMENTOS
+========================================================= */
+
+const rcModal = $("rcModal");
+
+const addRcBtn = $("addRcBtn");
+
+const txModalCloseR =
+    $("txModalCloseR");
+
+const txStepCategoryR =
+    $("txStepCategoryR");
+
+const txStepAmountR =
+    $("txStepAmountR");
+
+const txStepAccountR =
+    $("txStepAccountR");
+
+const txCategoriesR =
+    $("txCategoriesR");
+
+const txAccountsR =
+    $("txAccountsR");
+
+const txCategoryNextR =
+    $("txCategoryNextR");
+
+const txAmountNextR =
+    $("txAmountNextR");
+
+const txAccountNextR =
+    $("txAccountNextR");
+
+const txAmountDisplayR =
+    $("txAmountDisplayR");
+
+const txStepR =
+    $("txStepR");
+
+const txModalTitleR =
+    $("txModalTitleR");
+
+const txDescriptionR =
+    $("txDescriptionR");
+
+
+/* =========================================================
+   ABRIR MODAL
+========================================================= */
+
+function openRcModal() {
+
+    if (!currentUser) {
+        return;
+    }
+
+
+    rcSelectedCategory = null;
+
+    rcSelectedAccount = null;
+
+    rcAmountCents = 0;
+
+    rcStep = 1;
+
+
+    if (txDescriptionR) {
+        txDescriptionR.value = "";
+    }
+
+
+    if (txCategoryNextR) {
+        txCategoryNextR.disabled = true;
+    }
+
+
+    if (txAmountNextR) {
+        txAmountNextR.disabled = false;
+    }
+
+
+    if (txAccountNextR) {
+        txAccountNextR.disabled = true;
+    }
+
+
+    renderRcCategories();
+
+    renderRcAccounts();
+
+    updateRcAmountDisplay();
+
+    showRcStep(1);
+
+
+    rcModal.classList.add("active");
+
+    document.body.style.overflow = "hidden";
+}
+
+
+/* =========================================================
+   FECHAR MODAL
+========================================================= */
+
+function closeRcModal() {
+
+    rcModal.classList.remove("active");
+
+    document.body.style.overflow = "";
+
+
+    rcSelectedCategory = null;
+
+    rcSelectedAccount = null;
+
+    rcAmountCents = 0;
+
+    rcStep = 1;
+
+
+    if (txDescriptionR) {
+        txDescriptionR.value = "";
+    }
+}
+
+
+/* =========================================================
+   TROCAR PASSO
+========================================================= */
+
+function showRcStep(step) {
+
+    rcStep = step;
+
+
+    /*
+     * IMPORTANTE:
+     *
+     * Escopado no rcModal.
+     *
+     * Não pode usar:
+     * document.querySelectorAll(".tx-step-content")
+     *
+     * porque o modal de saída também possui
+     * esses elementos.
+     */
+
+    rcModal
+        .querySelectorAll(".tx-step-content")
+        .forEach((element) => {
+
+            element.classList.remove("active");
+
+        });
+
+
+    const steps = {
+
+        1: "txStepCategoryR",
+
+        2: "txStepAmountR",
+
+        3: "txStepAccountR"
+
+    };
+
+
+    const titles = {
+
+        1: "Escolha uma categoria",
+
+        2: "Digite o valor",
+
+        3: "Escolha uma conta"
+
+    };
+
+
+    const target =
+        $(steps[step]);
+
+
+    if (target) {
+
+        target.classList.add("active");
+
+    }
+
+
+    txStepR.textContent =
+        `${step}/3`;
+
+
+    txModalTitleR.textContent =
+        titles[step];
+
+}
+
+
+/* =========================================================
+   CATEGORIAS DE RECEITA
+========================================================= */
+
+function renderRcCategories() {
+
+    const container =
+        txCategoriesR;
+
+
+    /*
+     * Começa sem categoria.
+     */
+
+    rcSelectedCategory = null;
+
+
+    txCategoryNextR.disabled = true;
+
+
+    /*
+     * SOMENTE categorias income.
+     */
+
+    const categories =
+        CATEGORIES
+            .filter(
+                (category) =>
+                    category.type === "income"
+            )
+            .sort(
+                (a, b) =>
+                    String(a.name)
+                        .localeCompare(
+                            String(b.name)
+                        )
+            );
+
+
+    console.log(
+        "💰 Categorias de receita:",
+        categories
+    );
+
+
+    if (!categories.length) {
+
+        container.innerHTML = `
+            <div class="data-db-empty">
+                Nenhuma categoria de entrada cadastrada.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    /*
+     * AQUI estamos copiando exatamente
+     * a estrutura visual do modal de saída.
+     *
+     * Por isso as cores voltam.
+     */
+
+    container.innerHTML =
+        categories
+            .map(
+                (category, index) => {
+
+                    const color =
+                        category.color ||
+                        "#39FF14";
+
+
+                    return `
+                        <div
+                            class="
+                                category-card
+                            "
+
+                            data-category-id="${escapeHtml(
+                        category.id
+                    )}"
+
+                            style="
+                                --card-index:${index};
+
+                                background:
+                                linear-gradient(
+                                    135deg,
+                                    ${escapeHtml(
+                        color
+                    )},
+                                    #080808
+                                );
+                            "
+                        >
+
+                            <div
+                                class="
+                                    category-card-icon
+                                "
+                            >
+
+                                <i
+                                    class="
+                                        fas
+                                        fa-${escapeHtml(
+                        category.icon ||
+                        "tag"
+                    )}
+                                    "
+                                ></i>
+
+                            </div>
+
+
+                            <div
+                                class="
+                                    category-card-name
+                                "
+                            >
+                                ${escapeHtml(
+                        category.name
+                    )}
+                            </div>
+
+                        </div>
+                    `;
+                }
+            )
+            .join("");
+
+
+    /*
+     * Eventos das categorias
+     */
+
+    container
+        .querySelectorAll(
+            ".category-card"
+        )
+        .forEach((card) => {
+
+            card.addEventListener(
+                "click",
+                () => {
+
+                    const category =
+                        CATEGORIES.find(
+                            (item) =>
+                                String(
+                                    item.id
+                                ) ===
+                                String(
+                                    card.dataset
+                                        .categoryId
+                                )
+                        );
+
+
+                    if (!category) {
+                        return;
+                    }
+
+
+                    rcSelectedCategory =
+                        category;
+
+
+                    /*
+                     * Remove seleção anterior.
+                     */
+
+                    container
+                        .querySelectorAll(
+                            ".category-card"
+                        )
+                        .forEach((item) => {
+
+                            item.classList.remove(
+                                "selected"
+                            );
+
+                        });
+
+
+                    /*
+                     * Seleciona atual.
+                     */
+
+                    card.classList.add(
+                        "selected"
+                    );
+
+
+                    /*
+                     * Libera avançar.
+                     */
+
+                    txCategoryNextR.disabled =
+                        false;
+
+
+                    console.log(
+                        "💰 Categoria de receita selecionada:",
+                        category
+                    );
+
+                }
+            );
+
+        });
+}
+
+
+/* =========================================================
+   AVANÇAR CATEGORIA
+========================================================= */
+
+txCategoryNextR?.addEventListener(
+    "click",
+    () => {
+
+        if (!rcSelectedCategory) {
+
+            alert(
+                "Selecione uma categoria."
+            );
+
+            return;
+        }
+
+
+        /*
+         * Primeiro clique:
+         *
+         * mostra descrição.
+         *
+         * Igual ao modal de saída.
+         */
+
+        const descriptionWrap =
+            $("txDescriptionWrapR");
+
+
+        if (
+            descriptionWrap &&
+            descriptionWrap.style.display !== "block"
+        ) {
+
+            descriptionWrap.style.display =
+                "block";
+
+
+            txCategoryNextR.innerHTML = `
+                <i class="fas fa-chevron-right"></i>
+            `;
+
+
+            txDescriptionR?.focus();
+
+            return;
+        }
+
+
+        /*
+         * Segundo clique:
+         *
+         * vai para o VALOR.
+         */
+
+        showRcStep(2);
+
+    }
+);
+
+
+/* =========================================================
+   VALOR
+========================================================= */
+
+function updateRcAmountDisplay() {
+
+    const value =
+        rcAmountCents / 100;
+
+
+    txAmountDisplayR.textContent =
+        fmt(value);
+
+}
+
+
+/* =========================================================
+   TECLADO DA RECEITA
+========================================================= */
+
+const rcKeypad =
+    rcModal?.querySelector(
+        ".tx-keypad"
+    );
+
+
+rcKeypad?.querySelectorAll(
+    "button"
+).forEach((button) => {
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            const key =
+                button.dataset.key;
+
+
+            if (
+                key === "backspace"
+            ) {
+
+                rcAmountCents =
+                    Math.floor(
+                        rcAmountCents / 10
+                    );
+
+            } else if (
+                key === "00"
+            ) {
+
+                if (
+                    rcAmountCents > 0
+                ) {
+
+                    rcAmountCents *= 100;
+
+                }
+
+            } else {
+
+                const digit =
+                    Number(key);
+
+
+                if (
+                    !Number.isInteger(
+                        digit
+                    )
+                ) {
+                    return;
+                }
+
+
+                if (
+                    rcAmountCents >
+                    999999999
+                ) {
+                    return;
+                }
+
+
+                rcAmountCents =
+                    rcAmountCents * 10 +
+                    digit;
+            }
+
+
+            updateRcAmountDisplay();
+
+        }
+    );
+
+});
+
+
+/* =========================================================
+   AVANÇAR VALOR
+========================================================= */
+
+txAmountNextR?.addEventListener(
+    "click",
+    () => {
+
+        if (!rcSelectedCategory) {
+
+            alert(
+                "Selecione uma categoria."
+            );
+
+            return;
+        }
+
+
+        if (
+            rcAmountCents <= 0
+        ) {
+
+            alert(
+                "Digite um valor maior que zero."
+            );
+
+            return;
+        }
+
+
+        /*
+         * Agora vai para a conta.
+         */
+
+        renderRcAccounts();
+
+        showRcStep(3);
+
+    }
+);
+
+
+/* =========================================================
+   CONTAS
+========================================================= */
+
+function renderRcAccounts() {
+
+    const container =
+        txAccountsR;
+
+
+    if (!container) {
+        return;
+    }
+
+
+    rcSelectedAccount = null;
+
+    txAccountNextR.disabled = true;
+
+
+    if (!ACCOUNTS.length) {
+
+        container.innerHTML = `
+            <div class="data-db-empty">
+                Nenhuma conta cadastrada.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    /*
+     * MESMA ESTRUTURA VISUAL
+     * DO MODAL DE SAÍDA.
+     */
+
+    container.innerHTML =
+        ACCOUNTS
+            .map(
+                (account, index) => {
+
+                    const color =
+                        account.color ||
+                        "#C855FF";
+
+
+                    return `
+                        <div
+                            class="wallet-card"
+                            data-account-id="${escapeHtml(
+                        account.id
+                    )}"
+
+                            style="
+                                --card-index:${index};
+
+                                background:
+                                linear-gradient(
+                                    150deg,
+                                    ${escapeHtml(color)} 0%,
+                                    ${escapeHtml(color)} 52%,
+                                    #151515 100%,
+                                    #080808 100%
+                                );
+                            "
+                        >
+
+                            <div
+                                class="wallet-card-top"
+                            >
+
+                                <div
+                                    class="wallet-card-logo"
+                                    style="
+                                        box-shadow:
+                                        0 0 25px
+                                        ${escapeHtml(
+                        color
+                    )}55
+                                    "
+                                >
+
+                                    <img
+                                        src="assets/${escapeHtml(
+                        account.id
+                    )}.png"
+
+                                        alt=""
+
+                                        onerror="
+                                            this.style.display='none';
+                                            this.nextElementSibling.style.display='block';
+                                        "
+                                    >
+
+                                    <i
+                                        class="
+                                            fas
+                                            fa-university
+                                        "
+                                        style="
+                                            display:none
+                                        "
+                                    ></i>
+
+                                </div>
+
+
+                                <span
+                                    class="
+                                        wallet-card-type
+                                    "
+                                >
+                                    Conta
+                                </span>
+
+                            </div>
+
+
+                            <div
+                                class="
+                                    wallet-card-info
+                                "
+                            >
+
+                                <div
+                                    class="
+                                        wallet-card-name
+                                    "
+                                >
+                                    ${escapeHtml(
+                        account.name
+                    )}
+                                </div>
+
+
+                                <div
+                                    class="
+                                        wallet-card-balance
+                                    "
+                                >
+                                    ${fmt(
+                        Number(
+                            account.balance ||
+                            0
+                        )
+                    )}
+                                </div>
+
+                            </div>
+
+                        </div>
+                    `;
+                }
+            )
+            .join("");
+
+
+    /*
+     * Clique nas contas.
+     */
+
+    container
+        .querySelectorAll(
+            ".wallet-card"
+        )
+        .forEach((card) => {
+
+            card.addEventListener(
+                "click",
+                () => {
+
+                    const account =
+                        ACCOUNTS.find(
+                            (item) =>
+                                String(
+                                    item.id
+                                ) ===
+                                String(
+                                    card.dataset
+                                        .accountId
+                                )
+                        );
+
+
+                    if (!account) {
+                        return;
+                    }
+
+
+                    rcSelectedAccount =
+                        account;
+
+
+                    container
+                        .querySelectorAll(
+                            ".wallet-card"
+                        )
+                        .forEach((item) => {
+
+                            item.classList.remove(
+                                "selected"
+                            );
+
+                        });
+
+
+                    card.classList.add(
+                        "selected"
+                    );
+
+
+                    txAccountNextR.disabled =
+                        false;
+
+                }
+            );
+
+        });
+}
+
+
+/* =========================================================
+   SALVAR RECEITA
+========================================================= */
+
+async function sendReceipt() {
+
+    if (!currentUser) {
+        return;
+    }
+
+
+    if (!rcSelectedCategory) {
+
+        alert(
+            "Selecione uma categoria."
+        );
+
+        return;
+    }
+
+
+    if (!rcSelectedAccount) {
+
+        alert(
+            "Selecione uma conta."
+        );
+
+        return;
+    }
+
+
+    if (
+        rcAmountCents <= 0
+    ) {
+
+        alert(
+            "Digite um valor maior que zero."
+        );
+
+        return;
+    }
+
+
+    const amount =
+        rcAmountCents / 100;
+
+
+    const description =
+        txDescriptionR?.value.trim() || "";
+
+
+    /*
+     * Referência da conta.
+     */
+
+    const accountRef =
+        doc(
+            db,
+            "users",
+            currentUser.uid,
+            "accounts",
+            rcSelectedAccount.id
+        );
+
+
+    /*
+     * Coleção de transações.
+     */
+
+    const transactionCollection =
+        collection(
+            db,
+            "users",
+            currentUser.uid,
+            "transactions"
+        );
+
+
+    /*
+     * ID automático da nova transação.
+     */
+
+    const transactionRef =
+        doc(
+            transactionCollection
+        );
+
+
+    /*
+     * Data atual.
+     */
+
+    const today =
+        new Date();
+
+
+    const date =
+        today.getFullYear() +
+        "-" +
+        String(
+            today.getMonth() + 1
+        ).padStart(2, "0") +
+        "-" +
+        String(
+            today.getDate()
+        ).padStart(2, "0");
+
+
+    try {
+
+        txAccountNextR.disabled =
+            true;
+
+
+        txAccountNextR.innerHTML = `
+            <i
+                class="
+                    fas
+                    fa-spinner
+                    fa-spin
+                "
+            ></i>
+
+            Salvando...
+        `;
+
+
+        /*
+         * EXATAMENTE A MESMA IDEIA
+         * DO sendTransaction().
+         */
+
+        await runTransaction(
+            db,
+            async (transaction) => {
+
+                /*
+                 * Lê a conta atual.
+                 */
+
+                const accountSnapshot =
+                    await transaction.get(
+                        accountRef
+                    );
+
+
+                if (
+                    !accountSnapshot.exists()
+                ) {
+
+                    throw new Error(
+                        "Conta não encontrada."
+                    );
+
+                }
+
+
+                const accountData =
+                    accountSnapshot.data();
+
+
+                const currentBalance =
+                    Number(
+                        accountData.balance ||
+                        0
+                    );
+
+
+                /*
+                 * RECEITA:
+                 *
+                 * saldo + valor recebido
+                 */
+
+                const newBalance =
+                    currentBalance +
+                    amount;
+
+
+                /*
+                 * Cria o registro.
+                 */
+
+                transaction.set(
+                    transactionRef,
+                    {
+
+                        account:
+                            rcSelectedAccount.id,
+
+                        category:
+                            rcSelectedCategory.id,
+
+                        type:
+                            "income",
+
+                        amount:
+                            amount,
+
+                        desc:
+                            description,
+
+                        date,
+
+                        createdAt:
+                            serverTimestamp(),
+
+                        updatedAt:
+                            serverTimestamp()
+
+                    }
+                );
+
+
+                /*
+                 * Atualiza o saldo da conta.
+                 */
+
+                transaction.update(
+                    accountRef,
+                    {
+
+                        balance:
+                            newBalance,
+
+                        updatedAt:
+                            serverTimestamp()
+
+                    }
+                );
+
+            }
+        );
+
+
+        console.log(
+            "💰 Nova receita salva:",
+            {
+                account:
+                    rcSelectedAccount.id,
+
+                category:
+                    rcSelectedCategory.id,
+
+                amount,
+
+                description
+            }
+        );
+
+
+        /*
+         * FECHA SOMENTE DEPOIS
+         * QUE O FIREBASE CONFIRMAR.
+         */
+
+        closeRcModal();
+
+
+        /*
+         * Limpa estado.
+         */
+
+        rcSelectedCategory =
+            null;
+
+        rcSelectedAccount =
+            null;
+
+        rcAmountCents =
+            0;
+
+        rcStep =
+            1;
+
+
+    } catch (error) {
+
+        console.error(
+            "❌ Erro ao salvar receita:",
+            error
+        );
+
+
+        alert(
+            "Não foi possível salvar a receita."
+        );
+
+
+    } finally {
+
+        txAccountNextR.disabled =
+            false;
+
+
+        txAccountNextR.innerHTML = `
+            <i class="fas fa-paper-plane"></i>
+        `;
+
+    }
+}
+
+
+/* =========================================================
+   FINALIZAR
+========================================================= */
+
+txAccountNextR?.addEventListener(
+    "click",
+    async () => {
+
+        if (!rcSelectedAccount) {
+
+            alert(
+                "Selecione uma conta."
+            );
+
+            return;
+        }
+
+
+        await sendReceipt();
+
+    }
+);
+
+
+/* =========================================================
+   EVENTOS DO MODAL
+========================================================= */
+
+addRcBtn?.addEventListener(
+    "click",
+    () => {
+
+        openRcModal();
+
+    }
+);
+
+
+txModalCloseR?.addEventListener(
+    "click",
+    () => {
+
+        closeRcModal();
+
+    }
+);
+
+
+/*
+ * Pega o backdrop DENTRO do modal de receita.
+ *
+ * Não usa document.getElementById(),
+ * porque você possui IDs semelhantes nos modais.
+ */
+
+const rcBackdrop =
+    rcModal?.querySelector(
+        ".tx-modal-backdrop"
+    );
+
+
+rcBackdrop?.addEventListener(
+    "click",
+    () => {
+
+        closeRcModal();
+
+    }
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* =========================================================
