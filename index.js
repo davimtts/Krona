@@ -3154,7 +3154,7 @@ async function saveDataDb() {
 
     const deletedIds =
         dataDbDeleted &&
-        dataDbDeleted[dataDbOpenType]
+            dataDbDeleted[dataDbOpenType]
             ? Array.from(
                 dataDbDeleted[dataDbOpenType]
             )
@@ -4544,14 +4544,31 @@ async function sendTransaction() {
 
 
     const date =
+
         today.getFullYear() +
+
         "-" +
+
         String(
             today.getMonth() + 1
         ).padStart(2, "0") +
+
         "-" +
+
         String(
             today.getDate()
+        ).padStart(2, "0") +
+
+        " " +
+
+        String(
+            today.getHours()
+        ).padStart(2, "0") +
+
+        ":" +
+
+        String(
+            today.getMinutes()
         ).padStart(2, "0");
 
 
@@ -5774,31 +5791,31 @@ async function sendReceipt() {
     /* data com horas e minutos */
     const date =
 
-    today.getFullYear() +
+        today.getFullYear() +
 
-    "-" +
+        "-" +
 
-    String(
-        today.getMonth() + 1
-    ).padStart(2, "0") +
+        String(
+            today.getMonth() + 1
+        ).padStart(2, "0") +
 
-    "-" +
+        "-" +
 
-    String(
-        today.getDate()
-    ).padStart(2, "0") +
+        String(
+            today.getDate()
+        ).padStart(2, "0") +
 
-    " " +
+        " " +
 
-    String(
-        today.getHours()
-    ).padStart(2, "0") +
+        String(
+            today.getHours()
+        ).padStart(2, "0") +
 
-    ":" +
+        ":" +
 
-    String(
-        today.getMinutes()
-    ).padStart(2, "0");
+        String(
+            today.getMinutes()
+        ).padStart(2, "0");
 
 
     try {
