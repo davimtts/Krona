@@ -965,31 +965,48 @@ body.light .legend-dot {
 /* Bottom nav */
 .bottom-nav {
     position: fixed;
-    display: flex;
-    border-top: 1px solid var(--nav-border);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    flex-shrink: 0;
-    max-width: 430px;
-    bottom: 0;
-    z-index: 2;
     left: 0;
     right: 0;
+    bottom: 0;
+
     width: 100%;
-    background-color: var(--bg-card);
+    max-width: 430px;
+
+    display: flex;
+    flex-shrink: 0;
+
+    padding-bottom: env(safe-area-inset-bottom);
+
+    background: var(--nav-bg);
+
+    border-top: 1px solid var(--nav-border);
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    z-index: 999;
+
+    box-sizing: border-box;
 }
 
 .nav-btn {
     flex: 1;
+
     display: flex;
     flex-direction: column;
     align-items: center;
+
     gap: 2px;
+
     padding: 10px 0;
+
     border: none;
     background: transparent;
+
     cursor: pointer;
+
     -webkit-tap-highlight-color: transparent;
+
     position: relative;
 }
 
